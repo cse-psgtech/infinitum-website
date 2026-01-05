@@ -13,7 +13,7 @@ const MENU_ITEMS = [
     { label: 'News', icon: 'ri-newspaper-line', href: '/news' },
 ];
 
-const SLOT_ANGLES = [-75, -37.5, 0, 37.5, 75];
+const SLOT_ANGLES = [0, 22.5, 45, 67.5, 90];
 
 export default function CircularMenu() {
     const [isOpen, setIsOpen] = useState(false);

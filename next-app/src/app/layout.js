@@ -40,6 +40,7 @@ export const metadata = {
 import StylesProvider from "@/components/ThemeRegistry";
 import ClientTemplate from "@/components/ClientTemplate/ClientTemplate";
 import CircularMenu from "@/components/CircularMenu/CircularMenu";
+import SimpleHeader from "@/components/SimpleHeader/SimpleHeader";
 
 export default function RootLayout({ children }) {
   return (
@@ -56,6 +57,7 @@ export default function RootLayout({ children }) {
           <ClientTemplate>
             {children}
           </ClientTemplate>
+          <SimpleHeader />
           <CircularMenu />
         </StylesProvider>
       </body>
