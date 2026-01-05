@@ -28,7 +28,7 @@ class Component extends React.PureComponent {
     animateY: true
   };
 
-  enter () {
+  enter() {
     const { energy, sounds, animateY, onEnter } = this.props;
     const { duration } = energy;
 
@@ -55,7 +55,7 @@ class Component extends React.PureComponent {
     }
   }
 
-  exit () {
+  exit() {
     const { energy, sounds, onExit } = this.props;
     const { duration } = energy;
 
@@ -73,7 +73,7 @@ class Component extends React.PureComponent {
     });
   }
 
-  render () {
+  render() {
     const {
       theme,
       classes,
@@ -106,25 +106,10 @@ class Component extends React.PureComponent {
         ref={ref => (this.element = ref)}
         {...etc}
       >
-        <A href='https://www.youtube.com/channel/UCS8LdV8eOeK6XnMMkRP3pXA' title='YouTube' target='youtube'>
-          <span className='mdi mdi-youtube' />
-        </A>
-        <A href='https://open.spotify.com/artist/1cEPAqNFhmARDe0HgKOD3h' title='Spotify' target='spotify'>
-          <span className='mdi mdi-spotify' />
-        </A>
-        <A href='https://soundcloud.com/soulextract' title='SoundCloud' target='soundcloud'>
-          <span className='mdi mdi-soundcloud' />
-        </A>
-        <A href='https://www.facebook.com/soulextract' title='Facebook' target='facebook'>
-          <span className='mdi mdi-facebook' />
-        </A>
-        <A href='https://twitter.com/soulextract' title='Twitter' target='twitter'>
-          <span className='mdi mdi-twitter' />
-        </A>
-        <A href='https://www.instagram.com/soulextract' title='Instagram' target='instagram'>
+        <A href='https://www.instagram.com/infinitum.psgtech/' title='Instagram' target='instagram'>
           <span className='mdi mdi-instagram' />
         </A>
-        <A href='mailto:soulextractmusic@gmail.com' title='Email' target='email'>
+        <A href='https://mail.google.com/mail/?view=cm&fs=1&to=csea.cse@psgtech.ac.in' title='Email' target='_blank'>
           <span className='mdi mdi-email-outline' />
         </A>
       </div>

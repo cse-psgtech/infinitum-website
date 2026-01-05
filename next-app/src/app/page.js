@@ -96,12 +96,12 @@ class Component extends React.Component {
       <SecuenceComponent ref={ref => (this.secuenceElement = ref)}>
         <div className={classes.root}>
           <div className={classes.content}>
-            <span className={classes.presenter}>Computer Science Association Presents</span>
+            <span className={classes.presenter}>Computer Science and Engineering Association Presents</span>
             <Brand
               className={classes.brand}
               onLinkStart={this.onLinkStart}
             />
-            <span className={classes.dates}>FEB 13 & FEB 14</span>
+            <span className={classes.dates}>FEB 13 & 14</span>
             <Menu
               className={classes.menu}
               animation={{ duration: { enter: 400 } }}
@@ -113,11 +113,6 @@ class Component extends React.Component {
               onLinkStart={this.onLinkStart}
             />
           </div>
-          <Legal
-            className={classes.legal}
-            opaque
-            onLinkStart={this.onLinkStart}
-          />
         </div>
       </SecuenceComponent>
     );

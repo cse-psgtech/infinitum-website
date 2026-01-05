@@ -4,9 +4,10 @@ import { SCHEME_EXPAND } from './Menu.constants';
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
+    gap: 16,
     margin: [0, 'auto'],
     userSelect: 'none'
   },
@@ -35,18 +36,24 @@ const styles = theme => ({
   link: {
     overflow: 'hidden',
     opacity: ({ scheme }) => scheme === SCHEME_EXPAND ? 0 : 1,
+    backgroundColor: 'transparent',
+    borderRadius: 0,
+    border: `2px solid ${theme.color.secondary.main}`,
+    cursor: 'pointer',
+    padding: [12, 24],
+    transition: 'all 0.3s ease',
 
-    '&.link-active': {
-      color: theme.color.tertiary.main,
-      textShadow: `0 0 5px ${theme.color.tertiary.main}`
-    },
     '&:hover, &:focus': {
-      color: theme.color.secondary.light,
-      textShadow: `0 0 5px ${theme.color.secondary.light}`
+      backgroundColor: theme.color.secondary.main,
+      color: '#ffffff'
     }
   },
 
   '@media (min-width: 768px)': {
+    root: {
+      flexDirection: 'row',
+      gap: 20
+    },
     item: {
       display: 'block'
     },

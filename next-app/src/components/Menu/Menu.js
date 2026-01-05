@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import anime from 'animejs';
 
-import { getViewportRange } from '../../tools/viewport';
+import { useAuth } from '../../context/AuthContext';
 import { Link } from '../Link';
 import { Text } from '../Text';
 import { Secuence } from '../Secuence';
@@ -24,14 +24,16 @@ class Component extends React.PureComponent {
     onEnter: PropTypes.func,
     onExit: PropTypes.func,
     onLinkStart: PropTypes.func,
-    onLinkEnd: PropTypes.func
+    onLinkEnd: PropTypes.func,
+    user: PropTypes.object,
+    logout: PropTypes.func
   };
 
   static defaultProps = {
     scheme: SCHEME_NORMAL
   };
 
-  constructor () {
+  constructor() {
     super(...arguments);
 
     this.state = {
@@ -39,11 +41,11 @@ class Component extends React.PureComponent {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     window.addEventListener('route-change', this.onURLChange);
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     const { energy } = this.props;
 
     if (prevProps.energy.status !== energy.status) {
@@ -55,7 +57,7 @@ class Component extends React.PureComponent {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     const elements = this.element.querySelectorAll('a, b');
     anime.remove(elements);
 
@@ -66,7 +68,15 @@ class Component extends React.PureComponent {
     this.forceUpdate();
   }
 
-  enter () {
+  handleLogout = async () => {
+    const { logout } = this.props;
+    if (logout) {
+      await logout();
+      window.location.href = '/';
+    }
+  }
+
+  enter() {
     const { scheme } = this.props;
 
     if (scheme === SCHEME_NORMAL) {
@@ -76,76 +86,44 @@ class Component extends React.PureComponent {
     }
   }
 
-  animateNormalEnter () {
+  animateNormalEnter() {
     const { energy, onEnter } = this.props;
     const { duration } = energy;
 
-    const divisors = this.element.querySelectorAll('b');
-    const links = this.element.querySelectorAll('a');
-
-    anime.set(links, { opacity: 1 });
-
-    anime({
-      targets: divisors,
-      easing: 'easeOutCubic',
-      scaleY: [0, 1],
-      duration: duration.enter,
-      delay: (divisor, index) => index * duration.stagger,
-      complete: () => onEnter && onEnter()
-    });
-  }
-
-  animateExpandEnter () {
-    const { energy, sounds, onEnter } = this.props;
-    const { duration } = energy;
-    const viewportRange = getViewportRange();
-
-    const divisors = this.element.querySelectorAll('b');
-    const links = this.element.querySelectorAll('a');
-
-    sounds.expand.play();
-
-    if (!viewportRange.small) {
-      anime({
-        targets: divisors[1],
-        easing: 'easeOutCubic',
-        scaleY: [0, 1],
-        duration: duration.enter / 2
-      });
-      anime({
-        targets: [divisors[0], divisors[2]],
-        easing: 'easeOutCubic',
-        scaleY: [0, 1],
-        translateX: (divisor, index) => [[100, 0, -100][index], 0],
-        delay: duration.enter / 2,
-        duration: duration.enter / 2
-      });
-    }
+    const links = this.element.querySelectorAll('a, button');
 
     anime({
       targets: links,
       easing: 'easeOutCubic',
-      opacity: 1,
-      translateX: (link, index) => [[150, 75, -75, -150][index], 0],
-      delay: viewportRange.small ? 0 : duration.enter / 2,
-      duration: viewportRange.small ? duration.enter : duration.enter / 2,
+      opacity: [0, 1],
+      duration: duration.enter,
       complete: () => onEnter && onEnter()
     });
   }
 
-  exit () {
+  animateExpandEnter() {
+    const { energy, sounds, onEnter } = this.props;
+    const { duration } = energy;
+
+    const links = this.element.querySelectorAll('a, button');
+
+    sounds.expand.play();
+
+    anime({
+      targets: links,
+      easing: 'easeOutCubic',
+      opacity: [0, 1],
+      duration: duration.enter,
+      complete: () => onEnter && onEnter()
+    });
+  }
+
+  exit() {
     const { energy, onExit } = this.props;
     const { duration } = energy;
 
-    const divisors = this.element.querySelectorAll('b');
-    const links = this.element.querySelectorAll('a');
+    const links = this.element.querySelectorAll('a, button');
 
-    anime({
-      targets: divisors,
-      easing: 'easeOutCubic',
-      scaleY: [1, 0],
-      duration: duration.exit
-    });
     anime({
       targets: links,
       easing: 'easeOutCubic',
@@ -155,7 +133,7 @@ class Component extends React.PureComponent {
     });
   }
 
-  render () {
+  render() {
     const {
       theme,
       classes,
@@ -168,6 +146,8 @@ class Component extends React.PureComponent {
       onExit,
       onLinkStart,
       onLinkEnd,
+      user,
+      logout,
       ...etc
     } = this.props;
     const { showSecuence } = this.state;
@@ -180,6 +160,8 @@ class Component extends React.PureComponent {
       onLinkEnd
     };
 
+    const isAuthenticated = user != null;
+
     return (
       <Secuence
         animation={{ show: showSecuence, independent: true }}
@@ -190,49 +172,61 @@ class Component extends React.PureComponent {
           ref={ref => (this.element = ref)}
           {...etc}
         >
-          <Link href='/news' {...linkProps}>
-            <Text
-              animation={{ animate: animateText }}
-              audio={{ silent: !animateText }}
-            >
-              News
-            </Text>
-          </Link>
-          <b className={cx(classes.item, classes.divisor)}>|</b>
-          <Link href='/music' {...linkProps}>
-            <Text
-              animation={{ animate: animateText }}
-              audio={{ silent: !animateText }}
-            >
-              Music
-            </Text>
-          </Link>
-          <b className={cx(classes.item, classes.divisor)}>|</b>
-          <Link href='/charity' {...linkProps}>
-            <Text
-              animation={{ animate: animateText }}
-              audio={{ silent: !animateText }}
-            >
-              Charity
-            </Text>
-          </Link>
-          <b className={cx(classes.item, classes.divisor)}>|</b>
-          <Link href='/about' {...linkProps}>
-            <Text
-              animation={{ animate: animateText }}
-              audio={{ silent: !animateText }}
-            >
-              About
-            </Text>
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link href='/dashboard' {...linkProps}>
+                <Text
+                  animation={{ animate: animateText }}
+                  audio={{ silent: !animateText }}
+                >
+                  Dashboard
+                </Text>
+              </Link>
+              <button
+                className={cx(classes.item, classes.link)}
+                onMouseEnter={() => sounds.hover.play()}
+                onClick={this.handleLogout}
+              >
+                <Text
+                  animation={{ animate: animateText }}
+                  audio={{ silent: !animateText }}
+                >
+                  Logout
+                </Text>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href='/auth?type=register' {...linkProps}>
+                <Text
+                  animation={{ animate: animateText }}
+                  audio={{ silent: !animateText }}
+                >
+                  Register
+                </Text>
+              </Link>
+              <Link href='/auth?type=login' {...linkProps}>
+                <Text
+                  animation={{ animate: animateText }}
+                  audio={{ silent: !animateText }}
+                >
+                  Login
+                </Text>
+              </Link>
+            </>
+          )}
         </nav>
       </Secuence>
     );
   }
 }
 
-export { Component };
+// Wrapper component to use hooks with class component
+const MenuWithAuth = React.forwardRef((props, ref) => {
+  const { user, logout } = useAuth();
+  return <Component {...props} user={user} logout={logout} ref={ref} />;
+});
 
+MenuWithAuth.displayName = 'Menu';
 
-
-
+export { MenuWithAuth as Component };
