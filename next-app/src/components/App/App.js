@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import { AppContent } from '../AppContent';
+import { Header } from '../Header';
+import { Footer } from '../Footer';
 
 class Component extends React.Component {
   static displayName = 'Header';
@@ -26,9 +28,7 @@ class Component extends React.Component {
   }
 
   onRouteChangeStart = ({ detail: { isInternal, href } }) => {
-    if (isInternal && href === '/') {
-      // Header and Footer removed
-    }
+    // Logic restored if needed, or empty
   }
 
   onRouteChange = () => {
@@ -50,9 +50,11 @@ class Component extends React.Component {
           className={classes.content}
           ref={ref => (this.contentElement = ref)}
         >
+          <Header />
           <AppContent>
             {children}
           </AppContent>
+          <Footer />
         </div>
       </div>
     );

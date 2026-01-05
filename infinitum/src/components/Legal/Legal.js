@@ -50,7 +50,6 @@ class Component extends React.Component {
           onLinkEnd={onLinkEnd}
         >
           <Text animation={{ animate, show, duration }} stableTime>
-            — Open Source by Contributors —
           </Text>
         </Link>
       </p>
