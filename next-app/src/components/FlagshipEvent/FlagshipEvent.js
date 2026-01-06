@@ -14,16 +14,84 @@ const EVENT_DATA = {
     registerLink: '/events'
 };
 
+// Get API URL from environment
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export default function FlagshipEvent() {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [flagship, setFlagship] = useState({});
+    const [thooral, setThooral] = useState({})
     const cardRef = useRef(null);
 
     // Audio refs
     const clickSoundRef = useRef(null);
     const expandSoundRef = useRef(null);
     const hoverSoundRef = useRef(null);
+
+    // Fetch flagship event data
+    useEffect(() => {
+        const fetchFlagshipEvent = async () => {
+            try {
+                // Step 1: Fetch all events
+                const response = await fetch(`${API_URL}/api/events?limit=50`);
+                const data = await response.json();
+
+                // Handle different response formats
+                let events = [];
+                if (Array.isArray(data)) {
+                    events = data;
+                } else if (data.events && Array.isArray(data.events)) {
+                    events = data.events;
+                } else if (data.data && Array.isArray(data.data)) {
+                    events = data.data;
+                }
+
+                // Step 2: Find Thooral Hackathon
+                const thooral_hackathon = events.find(event =>
+                    event.eventName === "Thooral Hackathon"
+                );
+
+                if (thooral_hackathon) {
+                    // Set basic flagship data
+                    setFlagship({
+                        eventId: thooral_hackathon.eventId,
+                        eventName: thooral_hackathon.eventName,
+                        category: thooral_hackathon.category,
+                        oneLineDescription: thooral_hackathon.oneLineDescription,
+                        clubName: thooral_hackathon.clubName,
+                    });
+
+                    // Step 3: Fetch detailed event data
+                    const detailResponse = await fetch(`${API_URL}/api/events/${thooral_hackathon.eventId}`);
+                    const detailData = await detailResponse.json();
+
+                    let eventDetails = null;
+                    if (detailData.event && Array.isArray(detailData.event)) {
+                        eventDetails = detailData.event[0];
+                    } else if (detailData.event) {
+                        eventDetails = detailData.event;
+                    } else if (detailData.data && Array.isArray(detailData.data)) {
+                        eventDetails = detailData.data[0];
+                    } else if (detailData.data) {
+                        eventDetails = detailData.data;
+                    } else if (Array.isArray(detailData)) {
+                        eventDetails = detailData[0];
+                    } else {
+                        eventDetails = detailData;
+                    }
+
+                    setThooral(eventDetails);
+                    console.log('Thooral Details:', eventDetails);
+                }
+            } catch (err) {
+                console.error('Error fetching flagship event:', err);
+            }
+        };
+
+        fetchFlagshipEvent();
+    }, []);
 
     // Initialize audio on mount
     useEffect(() => {
@@ -187,8 +255,8 @@ export default function FlagshipEvent() {
 
                         {/* Info */}
                         <div className={styles.info}>
-                            <h2 className={styles.title} data-text={title}>{title}</h2>
-                            <p className={styles.description}>{shortDescription}</p>
+                            <h2 className={styles.title} data-text={title}>{flagship.eventName}</h2>
+                            <p className={styles.description}>{flagship.oneLineDescription}</p>
                             <button className={styles.ctaButton}>
                                 <span>Learn More</span>
                                 <i className="ri-arrow-right-line"></i>
@@ -211,7 +279,7 @@ export default function FlagshipEvent() {
                                 <div className={styles.modalGlowRing}></div>
                                 <Image
                                     src={posterSrc}
-                                    alt={title}
+                                    alt={thooral?.eventName || title}
                                     width={350}
                                     height={350}
                                     className={styles.modalPoster}
@@ -219,15 +287,82 @@ export default function FlagshipEvent() {
                                 />
                             </div>
                             <div className={styles.modalInfo}>
-                                <span className={styles.modalLabel}>FLAGSHIP EVENT</span>
-                                <h2 className={styles.modalTitle}>{title}</h2>
-                                <p className={styles.modalDesc}>{fullDescription}</p>
+                                <span className={styles.modalLabel}>{thooral?.category || 'FLAGSHIP EVENT'}</span>
+                                <h2 className={styles.modalTitle}>{thooral?.eventName || title}</h2>
+                                {thooral?.oneLineDescription && (
+                                    <p className={styles.modalOneLiner}>{thooral.oneLineDescription}</p>
+                                )}
+                                <p className={styles.modalDesc}>{thooral?.description || fullDescription}</p>
+
+                                {/* Event Info Grid */}
+                                <div className={styles.modalInfoGrid}>
+                                    {thooral?.date && (
+                                        <div className={styles.modalInfoItem}>
+                                            <span className={styles.modalInfoLabel}>Date</span>
+                                            <span className={styles.modalInfoValue}>
+                                                {new Date(thooral.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {thooral?.timing && (
+                                        <div className={styles.modalInfoItem}>
+                                            <span className={styles.modalInfoLabel}>Timing</span>
+                                            <span className={styles.modalInfoValue}>{thooral.timing}</span>
+                                        </div>
+                                    )}
+                                    {thooral?.hall && (
+                                        <div className={styles.modalInfoItem}>
+                                            <span className={styles.modalInfoLabel}>Venue</span>
+                                            <span className={styles.modalInfoValue}>{thooral.hall}</span>
+                                        </div>
+                                    )}
+                                    {thooral?.teamSize && (
+                                        <div className={styles.modalInfoItem}>
+                                            <span className={styles.modalInfoLabel}>Team Size</span>
+                                            <span className={styles.modalInfoValue}>{thooral.teamSize} Members</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Rounds */}
+                                {thooral?.rounds && thooral.rounds.length > 0 && (
+                                    <div className={styles.modalRounds}>
+                                        <h4 className={styles.modalSectionTitle}>Rounds</h4>
+                                        {thooral.rounds.map((round, index) => (
+                                            <div key={round._id || index} className={styles.modalRoundItem}>
+                                                <span className={styles.roundNumber}>{index + 1}</span>
+                                                <div>
+                                                    <strong>{round.title}</strong>
+                                                    {round.description && <p>{round.description}</p>}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Contacts */}
+                                {thooral?.contacts && thooral.contacts.length > 0 && (
+                                    <div className={styles.modalContacts}>
+                                        <h4 className={styles.modalSectionTitle}>Coordinators</h4>
+                                        {thooral.contacts.map((contact, index) => (
+                                            <div key={contact._id || index} className={styles.modalContactItem}>
+                                                <span>{contact.name}</span>
+                                                <a href={`tel:${contact.mobile}`}>{contact.mobile}</a>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {thooral?.clubName && (
+                                    <p className={styles.modalClub}>Organized by {thooral.clubName}</p>
+                                )}
+
                                 <Link
                                     href={registerLink}
                                     className={styles.registerBtn}
                                     onClick={() => playSound(clickSoundRef)}
                                 >
-                                    <span>View Event</span>
+                                    <span>Register Now</span>
                                     <i className="ri-arrow-right-up-line"></i>
                                 </Link>
                             </div>
