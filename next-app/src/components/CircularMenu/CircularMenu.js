@@ -38,6 +38,7 @@ export default function CircularMenu() {
     const [isMounted, setIsMounted] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [rotationAngle, setRotationAngle] = useState(0); // Track actual rotation
+    const [isDragging, setIsDragging] = useState(false); // Track drag state for icon transitions
     const [showHint, setShowHint] = useState(false); // First-time user hint
     const pathname = usePathname();
     const router = useRouter();
@@ -204,11 +205,20 @@ export default function CircularMenu() {
         const targetHref = MENU_ITEMS[index].href;
         
         // Calculate new rotation to bring clicked item to top
+        // Always rotate in the shortest direction
         const segmentAngle = 360 / MENU_ITEMS.length;
-        const newRotation = -index * segmentAngle;
+        const targetRotation = -index * segmentAngle;
+        
+        // Calculate the shortest path
+        let delta = targetRotation - rotationAngle;
+        // Normalize delta to be between -180 and 180
+        while (delta > 180) delta -= 360;
+        while (delta < -180) delta += 360;
+        
+        const newRotation = rotationAngle + delta;
         
         // Play rotation sound
-        if (rotateSound && newRotation !== rotationAngle) {
+        if (rotateSound && Math.abs(delta) > 1) {
             rotateSound.play();
         }
         
@@ -268,6 +278,7 @@ export default function CircularMenu() {
         // Check if we've moved enough to consider it a drag
         if (Math.abs(deltaAngle) > 5) {
             isDraggingRef.current = true;
+            setIsDragging(true); // Disable icon transitions
         }
         
         const newRotation = touchStartRef.current.rotation + deltaAngle;
@@ -279,17 +290,25 @@ export default function CircularMenu() {
         
         // Snap to nearest segment
         const segmentAngle = 360 / MENU_ITEMS.length;
-        const normalizedRotation = ((rotationAngle % 360) + 360) % 360;
         const nearestIndex = Math.round(-rotationAngle / segmentAngle) % MENU_ITEMS.length;
         const snappedIndex = (nearestIndex + MENU_ITEMS.length) % MENU_ITEMS.length;
         const snappedRotation = -snappedIndex * segmentAngle;
         
+        // Calculate shortest path for snap
+        let delta = snappedRotation - rotationAngle;
+        while (delta > 180) delta -= 360;
+        while (delta < -180) delta += 360;
+        const finalRotation = rotationAngle + delta;
+        
         if (isDraggingRef.current) {
+            // Re-enable transitions before snapping
+            setIsDragging(false);
+            
             // Play sound when snapping
-            if (rotateSound && Math.abs(snappedRotation - rotationAngle) > 1) {
+            if (rotateSound && Math.abs(delta) > 1) {
                 rotateSound.play();
             }
-            setRotationAngle(snappedRotation);
+            setRotationAngle(finalRotation);
             setSelectedIndex(snappedIndex);
         }
         
@@ -421,7 +440,7 @@ export default function CircularMenu() {
                                 <a
                                     key={index}
                                     href={item.href}
-                                    className={`${styles.segmentIcon} ${isHovered ? styles.iconHovered : ''} ${isActive ? styles.iconActive : ''} ${isSelected ? styles.iconSelected : ''}`}
+                                    className={`${styles.segmentIcon} ${isHovered ? styles.iconHovered : ''} ${isActive ? styles.iconActive : ''} ${isSelected ? styles.iconSelected : ''} ${isDragging ? styles.iconDragging : ''}`}
                                     style={{
                                         '--x': `${pos.x}px`,
                                         '--y': `${pos.y}px`,

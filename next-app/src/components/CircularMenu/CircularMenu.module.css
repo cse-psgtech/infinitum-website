@@ -263,6 +263,11 @@
     transform: translate(var(--x), var(--y)) rotate(var(--counter-rotate, 0deg)) scale(1.1);
 }
 
+/* Disable transitions during drag for instant counter-rotation */
+.iconDragging {
+    transition: none !important;
+}
+
 /* Center Circle - Close Button Only */
 .centerCircle {
     position: absolute;
