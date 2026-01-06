@@ -21,7 +21,7 @@ const RAW_EVENTS = [
     { title: 'Quest X', start: '10:30', end: '16:00', category: 'competition', day: 'day1' },
     { title: 'Workshop 1', start: '13:45', end: '16:00', category: 'workshop', day: 'day1' },
     { title: 'Infinitum Open Quiz', start: '16:30', end: '17:15', category: 'quiz', day: 'day1' },
-    { title: 'Award Ceremony I', start: '17:15', end: '18:00', category: 'general', day: 'day1' },
+    { title: 'Award Ceremony I', start: '17:15', end: '18:00', category: 'awards', day: 'day1' },
 
     // Day 2
     { title: 'Code Mania', start: '09:00', end: '15:00', category: 'competition', day: 'day2' },
@@ -31,16 +31,17 @@ const RAW_EVENTS = [
     { title: 'Git Wars', start: '09:00', end: '14:00', category: 'competition', day: 'day2' },
     { title: 'Workshop 2', start: '09:00', end: '15:00', category: 'workshop', day: 'day2' },
     { title: 'Workshop 3', start: '09:00', end: '15:00', category: 'workshop', day: 'day2' },
-    { title: 'Award Ceremony II', start: '15:30', end: '16:00', category: 'general', day: 'day2' }
+    { title: 'Award Ceremony II', start: '15:30', end: '16:00', category: 'awards', day: 'day2' }
 ];
 
 const CATEGORIES = {
     general: 'General',
-    competition: 'Competitions',
+    competition: 'Events',
     workshop: 'Workshops',
     talk: 'Talks',
     quiz: 'Quiz',
-    presentation: 'Presentation'
+    presentation: 'Presentation',
+    awards: 'Awards'
 };
 
 const START_HOUR = 9;
@@ -103,6 +104,8 @@ const Schedule = ({ classes, sounds }) => {
 
     useEffect(() => {
         if (!rootRef.current) return;
+
+        // Desktop Animations
         const timelineElems = rootRef.current.querySelectorAll(`.${classes.categoryRow}`);
         anime.set(timelineElems, { opacity: 0, translateY: 20 });
         anime({
@@ -111,6 +114,29 @@ const Schedule = ({ classes, sounds }) => {
             translateY: 0,
             delay: anime.stagger(50),
             easing: 'easeOutCubic'
+        });
+
+        // Mobile Animations
+        const mobileCards = rootRef.current.querySelectorAll(`.${classes.mobileEventCard}`);
+        const mobileGroups = rootRef.current.querySelectorAll(`.${classes.mobileCategoryGroup}`);
+
+        anime.set(mobileGroups, { opacity: 0, translateX: -20 });
+        anime.set(mobileCards, { opacity: 0, translateY: 20 });
+
+        anime({
+            targets: mobileGroups,
+            opacity: 1,
+            translateX: 0,
+            delay: anime.stagger(100),
+            easing: 'easeOutQuad'
+        });
+
+        anime({
+            targets: mobileCards,
+            opacity: 1,
+            translateY: 0,
+            delay: anime.stagger(50, { start: 200 }), // Start after groups
+            easing: 'spring(1, 80, 10, 0)'
         });
     }, [activeDay]);
 
@@ -140,8 +166,8 @@ const Schedule = ({ classes, sounds }) => {
                 ))}
             </div>
 
-            {/* Timeline */}
-            <div className={classes.timelineWrapper}>
+            {/* Desktop Timeline */}
+            <div className={cx(classes.timelineWrapper, classes.desktopView)}>
                 <div className={classes.timeline}>
                     {/* Time Axis */}
                     <div className={classes.timeAxis}>
@@ -196,6 +222,40 @@ const Schedule = ({ classes, sounds }) => {
                         );
                     })}
                 </div>
+            </div>
+
+            {/* Mobile List View */}
+            <div className={classes.mobileView}>
+                {Object.keys(CATEGORIES).map(catKey => {
+                    const catEvents = RAW_EVENTS
+                        .filter(e => e.day === activeDay && e.category === catKey)
+                        .sort((a, b) => timeToPercent(a.start) - timeToPercent(b.start));
+
+                    if (catEvents.length === 0) return null;
+
+                    return (
+                        <div key={catKey} className={classes.mobileCategoryGroup}>
+                            <div className={classes.mobileTimelineLine} />
+                            <div className={classes.mobileCategoryTitle}>{CATEGORIES[catKey]}</div>
+                            {catEvents.map((event, idx) => (
+                                <div key={idx} className={classes.mobileEventWrapper}>
+                                    <div className={classes.mobileTimelineDot} />
+                                    <div
+                                        className={cx(classes.mobileEventCard, classes[event.category])}
+                                        onClick={playClick}
+                                    >
+                                        <div className={classes.mobileEventHeader}>
+                                            <div className={classes.mobileEventTitle}>{event.title}</div>
+                                        </div>
+                                        <div className={classes.mobileEventTime}>
+                                            {formatTime(event.start)} - {formatTime(event.end)}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

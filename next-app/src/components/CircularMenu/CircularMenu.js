@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { Howl } from 'howler';
 import styles from './CircularMenu.module.css';
 
 const MENU_ITEMS = [
@@ -13,20 +14,63 @@ const MENU_ITEMS = [
     { label: 'News', icon: 'ri-newspaper-line', href: '/news' },
 ];
 
+// Sound effects
+let rotateSound = null;
+let openSound = null;
+
+if (typeof window !== 'undefined') {
+    rotateSound = new Howl({
+        src: ['/sounds/deploy.mp3'],
+        volume: 0.3,
+    });
+    openSound = new Howl({
+        src: ['/sounds/expand.mp3'],
+        volume: 0.25,
+    });
+}
+
 export default function CircularMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [selectedIndex, setSelectedIndex] = useState(0); // Keyboard selection highlight
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const [mouseAngle, setMouseAngle] = useState(null);
     const [isMounted, setIsMounted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [rotationAngle, setRotationAngle] = useState(0); // Track actual rotation
+    const [isDragging, setIsDragging] = useState(false); // Track drag state for icon transitions
+    const [showHint, setShowHint] = useState(false); // First-time user hint
     const pathname = usePathname();
     const router = useRouter();
     const menuRef = useRef(null);
     const centerRef = useRef({ x: 0, y: 0 });
+    const touchStartRef = useRef({ angle: 0, rotation: 0 }); // For touch rotation
+    const isDraggingRef = useRef(false);
 
     // Set mounted state to avoid hydration mismatch
     useEffect(() => {
         setIsMounted(true);
+        
+        // Check if mobile
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        
+        // Check if user has seen the menu hint before
+        const hasSeenHint = localStorage.getItem('menu_hint_seen');
+        if (!hasSeenHint) {
+            // Show hint after a short delay
+            const timer = setTimeout(() => {
+                setShowHint(true);
+            }, 2000);
+            
+            return () => {
+                clearTimeout(timer);
+                window.removeEventListener('resize', checkMobile);
+            };
+        }
+        
+        return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
     useEffect(() => {
@@ -34,6 +78,9 @@ export default function CircularMenu() {
         const index = MENU_ITEMS.findIndex(item => item.href === pathname);
         if (index !== -1) {
             setActiveIndex(index);
+            setSelectedIndex(index);
+            // Only set initial rotation on first mount, not on pathname changes
+            // This prevents backward rotation after navigation
         }
     }, [pathname, isMounted]);
 
@@ -64,17 +111,17 @@ export default function CircularMenu() {
             if (angle < 0) angle += 360;
             setMouseAngle(angle);
             
-            // Determine which segment the mouse is in, accounting for rotation
+            // Determine which segment the mouse is in
             const segmentAngle = 360 / MENU_ITEMS.length;
-            const rotationOffset = activeIndex * segmentAngle; // Reverse the visual offset
-            const adjustedAngle = (angle + rotationOffset + segmentAngle / 2) % 360;
+            // Account for current rotation
+            const adjustedAngle = (angle - rotationAngle + segmentAngle / 2 + 360) % 360;
             const segmentIndex = Math.floor(adjustedAngle / segmentAngle);
-            setHoveredIndex(segmentIndex);
+            setHoveredIndex(segmentIndex % MENU_ITEMS.length);
         } else if (distance <= 50) {
             setHoveredIndex(null);
             setMouseAngle(null);
         }
-    }, [isOpen, activeIndex]);
+    }, [isOpen, rotationAngle]);
 
     useEffect(() => {
         if (isOpen) {
@@ -83,7 +130,67 @@ export default function CircularMenu() {
         }
     }, [isOpen, handleMouseMove]);
 
+    // Keyboard shortcut: Q to toggle menu, Left/Right to select, Enter to navigate
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            // Don't trigger if user is typing in an input/textarea
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+                return;
+            }
+            
+            if (e.key === 'q' || e.key === 'Q') {
+                e.preventDefault();
+                toggleMenu();
+            }
+            
+            // Arrow keys and Enter only work when menu is open
+            if (isOpen) {
+                const segmentAngle = 360 / MENU_ITEMS.length;
+                
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    // Rotate counterclockwise (previous item) - still forward motion
+                    const newIndex = (selectedIndex - 1 + MENU_ITEMS.length) % MENU_ITEMS.length;
+                    const stepsForward = (newIndex - selectedIndex + MENU_ITEMS.length) % MENU_ITEMS.length;
+                    setSelectedIndex(newIndex);
+                    setRotationAngle(rotationAngle - stepsForward * segmentAngle);
+                    if (rotateSound) rotateSound.play();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    // Rotate clockwise (next item) - forward motion
+                    const newIndex = (selectedIndex + 1) % MENU_ITEMS.length;
+                    const stepsForward = (newIndex - selectedIndex + MENU_ITEMS.length) % MENU_ITEMS.length;
+                    setSelectedIndex(newIndex);
+                    setRotationAngle(rotationAngle - stepsForward * segmentAngle);
+                    if (rotateSound) rotateSound.play();
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    // Navigate to selected page
+                    handleItemClick({ preventDefault: () => {} }, selectedIndex);
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    setIsOpen(false);
+                }
+            }
+        };
+        
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, showHint, selectedIndex]);
+
     const toggleMenu = () => {
+        if (!isOpen && openSound) {
+            openSound.play();
+        }
+        // Hide hint when user clicks the menu
+        if (showHint) {
+            setShowHint(false);
+            localStorage.setItem('menu_hint_seen', 'true');
+        }
+        // Sync selected index with active index when opening
+        if (!isOpen) {
+            setSelectedIndex(activeIndex);
+        }
         setIsOpen(!isOpen);
         setHoveredIndex(null);
         setMouseAngle(null);
@@ -92,27 +199,146 @@ export default function CircularMenu() {
     const handleItemClick = (e, index) => {
         e.preventDefault(); // Prevent default Link navigation
         
+        // If dragging on mobile, don't navigate
+        if (isDraggingRef.current) {
+            return;
+        }
+        
         const targetHref = MENU_ITEMS[index].href;
         
-        // Update active index for visual rotation
+        // Calculate rotation using modulo to always go forward
+        const segmentAngle = 360 / MENU_ITEMS.length;
+        
+        // Normalize current rotation to 0-359 range
+        const normalizedCurrent = ((rotationAngle % 360) + 360) % 360;
+        
+        // Calculate current index based on normalized rotation
+        const currentNormalizedIndex = Math.round(-normalizedCurrent / segmentAngle) % MENU_ITEMS.length;
+        
+        // Calculate steps to move forward (always clockwise)
+        const stepsForward = (index - currentNormalizedIndex + MENU_ITEMS.length) % MENU_ITEMS.length;
+        
+        // If no movement needed, don't rotate
+        if (stepsForward === 0) {
+            router.push(targetHref);
+            setIsOpen(false);
+            return;
+        }
+        
+        // Always rotate clockwise (negative = clockwise)
+        const delta = -stepsForward * segmentAngle;
+        const newRotation = rotationAngle + delta;
+        
+        // Play rotation sound
+        if (rotateSound) {
+            rotateSound.play();
+        }
+        
+        // Animate rotation
+        setRotationAngle(newRotation);
         setActiveIndex(index);
+        setSelectedIndex(index);
         
         // Wait for rotation animation, then navigate and close
         setTimeout(() => {
             router.push(targetHref);
             setIsOpen(false);
             setHoveredIndex(null);
-        }, 400);
+        }, 500);
     };
 
-    // Calculate position for each segment's icon WITH rotation offset
+    // Touch handlers for mobile rotation
+    const getTouchAngle = (touch) => {
+        const cx = centerRef.current.x;
+        const cy = centerRef.current.y;
+        const dx = touch.clientX - cx;
+        const dy = touch.clientY - cy;
+        return Math.atan2(dy, dx) * (180 / Math.PI);
+    };
+
+    const handleTouchStart = (e) => {
+        if (!isMobile || !isOpen) return;
+        
+        const touch = e.touches[0];
+        const cx = centerRef.current.x;
+        const cy = centerRef.current.y;
+        const dx = touch.clientX - cx;
+        const dy = touch.clientY - cy;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Only start dragging if touch is on the wheel (not center button)
+        if (distance > 40 && distance < 180) {
+            touchStartRef.current = {
+                angle: getTouchAngle(touch),
+                rotation: rotationAngle
+            };
+            isDraggingRef.current = false;
+        }
+    };
+
+    const handleTouchMove = (e) => {
+        if (!isMobile || !isOpen || touchStartRef.current.angle === undefined) return;
+        
+        const touch = e.touches[0];
+        const currentAngle = getTouchAngle(touch);
+        let deltaAngle = currentAngle - touchStartRef.current.angle;
+        
+        // Handle angle wrap-around
+        if (deltaAngle > 180) deltaAngle -= 360;
+        if (deltaAngle < -180) deltaAngle += 360;
+        
+        // Check if we've moved enough to consider it a drag
+        if (Math.abs(deltaAngle) > 5) {
+            isDraggingRef.current = true;
+            setIsDragging(true); // Disable icon transitions
+        }
+        
+        const newRotation = touchStartRef.current.rotation + deltaAngle;
+        setRotationAngle(newRotation);
+    };
+
+    const handleTouchEnd = () => {
+        if (!isMobile || !isOpen) return;
+        
+        // Snap to nearest segment
+        const segmentAngle = 360 / MENU_ITEMS.length;
+        const nearestIndex = Math.round(-rotationAngle / segmentAngle) % MENU_ITEMS.length;
+        const snappedIndex = (nearestIndex + MENU_ITEMS.length) % MENU_ITEMS.length;
+        const snappedRotation = -snappedIndex * segmentAngle;
+        
+        // Calculate shortest path for snap
+        let delta = snappedRotation - rotationAngle;
+        while (delta > 180) delta -= 360;
+        while (delta < -180) delta += 360;
+        const finalRotation = rotationAngle + delta;
+        
+        if (isDraggingRef.current) {
+            // Re-enable transitions before snapping
+            setIsDragging(false);
+            
+            // Play sound when snapping
+            if (rotateSound && Math.abs(delta) > 1) {
+                rotateSound.play();
+            }
+            setRotationAngle(finalRotation);
+            setSelectedIndex(snappedIndex);
+        }
+        
+        // Reset after a short delay
+        setTimeout(() => {
+            isDraggingRef.current = false;
+        }, 100);
+        
+        touchStartRef.current = { angle: undefined, rotation: 0 };
+    };
+
+    // Calculate position for each segment's icon (no rotation offset - handled by CSS)
     const getIconPosition = (index) => {
         const total = MENU_ITEMS.length;
         const segmentAngle = 360 / total;
-        // Apply rotation so active item is always at top (index 0 position)
-        const rotationOffset = -activeIndex * segmentAngle;
-        const angle = index * segmentAngle + rotationOffset; // 0 = top
-        const radius = 100; // Distance from center to icon
+        const angle = index * segmentAngle; // 0 = top
+        // Desktop: (65+195)/2=130, Mobile: (45+135)/2=90
+        const radius = isMobile ? 90 : 130;
         
         const rad = (angle - 90) * (Math.PI / 180);
         const x = Math.cos(rad) * radius;
@@ -121,17 +347,16 @@ export default function CircularMenu() {
         return { x, y, angle };
     };
 
-    // Generate SVG path for a pie segment WITH rotation offset
+    // Generate SVG path for a pie segment (no rotation offset - handled by CSS)
     const getSegmentPath = (index) => {
         const total = MENU_ITEMS.length;
         const segmentAngle = 360 / total;
-        // Apply rotation so active item is always at top
-        const rotationOffset = -activeIndex * segmentAngle;
-        const startAngle = index * segmentAngle - segmentAngle / 2 - 90 + rotationOffset;
+        const startAngle = index * segmentAngle - segmentAngle / 2 - 90;
         const endAngle = startAngle + segmentAngle;
         
-        const innerRadius = 45;
-        const outerRadius = 150;
+        // Desktop vs Mobile radii
+        const innerRadius = isMobile ? 45 : 65;
+        const outerRadius = isMobile ? 135 : 195;
         
         const startRad = startAngle * (Math.PI / 180);
         const endRad = endAngle * (Math.PI / 180);
@@ -154,72 +379,98 @@ export default function CircularMenu() {
         <nav className={`${styles.navContainer} ${isOpen ? styles.open : ''}`} ref={menuRef}>
             <div className={styles.menuBackdrop} onClick={() => setIsOpen(false)} />
 
-            {/* Toggle Button */}
-            <button className={styles.toggleBtn} onClick={toggleMenu}>
+            {/* Toggle Button with pulse animation for new users */}
+            <button className={`${styles.toggleBtn} ${showHint ? styles.pulsing : ''}`} onClick={toggleMenu}>
                 <i className={`ri-menu-3-line ${styles.menuIcon}`}></i>
                 <i className={`ri-close-line ${styles.closeIcon}`}></i>
             </button>
 
+            {/* First-time user hint tooltip - click to dismiss */}
+            {showHint && (
+                <div 
+                    className={styles.menuHint}
+                    onClick={() => {
+                        setShowHint(false);
+                        localStorage.setItem('menu_hint_seen', 'true');
+                    }}
+                >
+                    <span>Click to navigate</span>
+                    <div className={styles.hintArrow}></div>
+                </div>
+            )}
+
             {/* Pie Menu - only render after mount to avoid hydration mismatch */}
             {isMounted && (
-                <div className={styles.pieMenu}>
-                    <svg 
-                        viewBox="-160 -160 320 320" 
-                        className={styles.pieSvg}
+                <div 
+                    className={styles.pieMenu}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                >
+                    {/* Rotating container for segments and icons */}
+                    <div 
+                        className={`${styles.rotatingContainer} ${isDraggingRef.current ? styles.dragging : ''}`}
+                        style={{ transform: `rotate(${rotationAngle}deg)` }}
                     >
-                        {/* Segment backgrounds */}
+                        <svg 
+                            viewBox={isMobile ? "-180 -180 360 360" : "-210 -210 420 420"}
+                            className={styles.pieSvg}
+                        >
+                            {/* Segment backgrounds */}
+                            {MENU_ITEMS.map((item, index) => {
+                                const isHovered = hoveredIndex === index;
+                                const isActive = activeIndex === index;
+                                const isSelected = selectedIndex === index;
+                                
+                                return (
+                                    <g key={index}>
+                                        {/* Segment path */}
+                                        <path
+                                            d={getSegmentPath(index)}
+                                            className={`${styles.segment} ${isHovered ? styles.segmentHovered : ''} ${isActive ? styles.segmentActive : ''} ${isSelected ? styles.segmentSelected : ''}`}
+                                            onClick={(e) => handleItemClick(e, index)}
+                                        />
+                                        
+                                        {/* Segment border */}
+                                        <path
+                                            d={getSegmentPath(index)}
+                                            className={styles.segmentBorder}
+                                        />
+                                    </g>
+                                );
+                            })}
+                        </svg>
+
+                        {/* Icons positioned on segments */}
                         {MENU_ITEMS.map((item, index) => {
+                            const pos = getIconPosition(index);
                             const isHovered = hoveredIndex === index;
                             const isActive = activeIndex === index;
+                            const isSelected = selectedIndex === index;
                             
                             return (
-                                <g key={index}>
-                                    {/* Segment path */}
-                                    <path
-                                        d={getSegmentPath(index)}
-                                        className={`${styles.segment} ${isHovered ? styles.segmentHovered : ''} ${isActive ? styles.segmentActive : ''}`}
-                                        onClick={(e) => handleItemClick(e, index)}
-                                    />
-                                    
-                                    {/* Segment border */}
-                                    <path
-                                        d={getSegmentPath(index)}
-                                        className={styles.segmentBorder}
-                                    />
-                                </g>
+                                <a
+                                    key={index}
+                                    href={item.href}
+                                    className={`${styles.segmentIcon} ${isHovered ? styles.iconHovered : ''} ${isActive ? styles.iconActive : ''} ${isSelected ? styles.iconSelected : ''} ${isDragging ? styles.iconDragging : ''}`}
+                                    style={{
+                                        '--x': `${pos.x}px`,
+                                        '--y': `${pos.y}px`,
+                                        // Counter-rotate icons so they stay upright
+                                        '--counter-rotate': `${-rotationAngle}deg`,
+                                    }}
+                                    onClick={(e) => handleItemClick(e, index)}
+                                >
+                                    <i className={item.icon}></i>
+                                    <span className={styles.iconLabel}>{item.label}</span>
+                                </a>
                             );
                         })}
-                    </svg>
+                    </div>
 
-                    {/* Icons positioned on segments */}
-                    {MENU_ITEMS.map((item, index) => {
-                        const pos = getIconPosition(index);
-                        const isHovered = hoveredIndex === index;
-                        const isActive = activeIndex === index;
-                        
-                        return (
-                            <a
-                                key={index}
-                                href={item.href}
-                                className={`${styles.segmentIcon} ${isHovered ? styles.iconHovered : ''} ${isActive ? styles.iconActive : ''}`}
-                                style={{
-                                    '--x': `${pos.x}px`,
-                                    '--y': `${pos.y}px`,
-                                }}
-                                onClick={(e) => handleItemClick(e, index)}
-                            >
-                                <i className={item.icon}></i>
-                                <span className={styles.iconLabel}>{item.label}</span>
-                            </a>
-                        );
-                    })}
-
-                    {/* Center circle with close button */}
+                    {/* Center circle with close button only */}
                     <button className={styles.centerCircle} onClick={() => setIsOpen(false)}>
-                        <i className="ri-close-line" style={{ fontSize: 28, color: '#c72071' }}></i>
-                        {hoveredIndex !== null && (
-                            <span className={styles.centerLabel}>{MENU_ITEMS[hoveredIndex].label}</span>
-                        )}
+                        <i className="ri-close-line" style={{ fontSize: 20, color: '#c72071' }}></i>
                     </button>
                 </div>
             )}
