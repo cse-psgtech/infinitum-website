@@ -39,8 +39,8 @@ export const metadata = {
 
 import StylesProvider from "@/components/ThemeRegistry";
 import ClientTemplate from "@/components/ClientTemplate/ClientTemplate";
-import SimpleHeader from "@/components/SimpleHeader/SimpleHeader";
 import { AuthProvider } from "@/context/AuthContext";
+import CircularMenu from "@/components/CircularMenu/CircularMenu";
 
 export default function RootLayout({ children }) {
   return (
@@ -58,7 +58,7 @@ export default function RootLayout({ children }) {
             <ClientTemplate>
               {children}
             </ClientTemplate>
-            <SimpleHeader />
+            <CircularMenu />
           </AuthProvider>
         </StylesProvider>
       </body>

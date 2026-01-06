@@ -14,6 +14,7 @@ import { Link } from '@/components/Link';
 import { Text } from '@/components/Text';
 import { Header } from '@/components/Header';
 import PrizePool from '@/components/PrizePool/PrizePool';
+import SimpleHeader from '@/components/SimpleHeader/SimpleHeader';
 
 // Original had: import { Secuence } from '../components/Secuence';
 // Note: I need to ensure import paths are correct. @/ is src/
@@ -122,6 +123,7 @@ class Component extends React.Component {
 
     return (
       <>
+        <SimpleHeader />
         <SecuenceComponent ref={ref => (this.secuenceElement = ref)}>
           <div className={classes.root}>
             <div className={classes.content}>

@@ -3,7 +3,6 @@
 import React from 'react';
 import Image from 'next/image';
 import styles from './SimpleHeader.module.css';
-import CircularMenu from '../CircularMenu/CircularMenu';
 
 export default function SimpleHeader() {
     return (
@@ -28,7 +27,7 @@ export default function SimpleHeader() {
                         alt="PSG Logo"
                         height={80}
                         width={80}
-                        style={{ width: '80px', height: '80px', marginTop: '20px'}}
+                        style={{ width: '80px', height: '80px', marginTop: '20px' }}
                         className={styles.orgLogo}
                     />
                     <Image
@@ -46,7 +45,6 @@ export default function SimpleHeader() {
                         className={styles.orgLogo}
                     />
                 </div>
-                <CircularMenu />
             </div>
         </header>
     );

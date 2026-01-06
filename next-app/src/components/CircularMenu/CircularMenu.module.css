@@ -177,7 +177,7 @@
     transition: 0.3s;
 }
 
-/* External label (below icon) - HIDDEN ON DESKTOP */
+/* External label (below icon) */
 .label {
     position: absolute;
     top: 100%;
@@ -187,12 +187,11 @@
     padding: 2px 8px;
     border-radius: 12px;
     font-size: 11px;
-    opacity: 0;
+    opacity: 1;
     transition: 0.3s;
     pointer-events: none;
     white-space: nowrap;
-    display: none;
-    /* FORCE HIDDEN ON DESKTOP */
+    display: block;
 }
 
 .link:hover .iconCircle {

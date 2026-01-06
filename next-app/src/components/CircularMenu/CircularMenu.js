@@ -45,7 +45,7 @@ export default function CircularMenu() {
         const step = 360 / total;
         // Angle calculation
         const angle = 90 + (index - activeIndex) * step;
-        
+
         return {
             '--angle': `${angle}deg`,
             '--i': index,
@@ -57,24 +57,18 @@ export default function CircularMenu() {
             <div className={styles.menuBackdrop} onClick={() => setIsOpen(false)} />
 
             <button className={styles.toggleBtn} onClick={toggleMenu}>
-                {isOpen && hoveredLabel ? (
-                     <span className={styles.centerLabel}>{hoveredLabel}</span>
-                ) : (
-                    <>
-                        <i className={`ri-menu-3-line ${styles.menuIcon}`}></i>
-                        <i className={`ri-close-line ${styles.closeIcon}`}></i>
-                    </>
-                )}
+                <i className={`ri-menu-3-line ${styles.menuIcon}`}></i>
+                <i className={`ri-close-line ${styles.closeIcon}`}></i>
             </button>
             <ul className={styles.submenu}>
                 {MENU_ITEMS.map((item, index) => (
-                    <li 
-                        key={index} 
+                    <li
+                        key={index}
                         style={getItemStyle(index)}
                         className={index === activeIndex ? styles.active : ''}
                     >
-                        <Link 
-                            href={item.href} 
+                        <Link
+                            href={item.href}
                             className={styles.link}
                             onClick={() => handleItemClick(index)}
                             onMouseEnter={() => setHoveredLabel(item.label)}
