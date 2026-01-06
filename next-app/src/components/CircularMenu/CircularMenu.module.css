@@ -36,8 +36,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     background-color: var(--primary-color);
     border-radius: 50%;
     cursor: pointer;
@@ -47,17 +47,17 @@
     z-index: 1001;
     border: none;
     outline: none;
+    color: var(--white-color);
 }
+
 /* Move button to center when open */
 .navContainer.open .toggleBtn {
-    transform: translate(calc(50vw - 45px), calc(50vh - 45px));
+    transform: translate(calc(50vw - 50px), calc(50vh - 50px));
     box-shadow: 0 0 0 10px rgba(199, 32, 113, 0.2);
-    /* Ensure it stays on top of items */
 }
 
 .toggleBtn i {
     font-size: 24px;
-    color: var(--white-color);
     position: absolute;
     transition: opacity 0.3s, transform 0.3s;
 }
@@ -82,8 +82,27 @@
     transform: rotate(0);
 }
 
-.navContainer.open .toggleBtn {
-    box-shadow: 0 0 0 5px rgba(199, 32, 113, 0.2);
+/* Center Label in Button */
+.centerLabel {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--white-color);
+    animation: fadeIn 0.3s ease;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 4px;
+    line-height: 1.1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    word-break: break-word; /* Ensure long words break if needed */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 /* Submenu centered */
@@ -109,11 +128,6 @@
     margin-left: -30px;
     margin-top: -30px;
     
-    /* 
-       Rotation logic:
-       Rotate to angle -> Translate out by radius -> Rotate back for icon upright consistency
-       Radius is 0 when closed.
-    */
     transform: rotate(var(--angle)) translate(0px) rotate(calc(var(--angle) * -1));
     opacity: 0;
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s;
@@ -127,8 +141,10 @@
 .navContainer.open .submenu li {
     opacity: 1;
     /* Expanded radius */
-    transform: rotate(var(--angle)) translate(130px) rotate(calc(var(--angle) * -1));
+    transform: rotate(var(--angle)) translate(140px) rotate(calc(var(--angle) * -1));
     pointer-events: auto;
+    /* Staggered Delay */
+    transition-delay: calc(var(--i) * 0.05s);
 }
 
 .link {
@@ -136,6 +152,7 @@
     flex-direction: column;
     align-items: center;
     text-decoration: none;
+    position: relative;
 }
 
 .iconCircle {
@@ -153,6 +170,7 @@
     transition: 0.3s;
 }
 
+/* External label (below icon) - HIDDEN ON DESKTOP */
 .label {
     position: absolute;
     top: 100%;
@@ -161,11 +179,12 @@
     color: var(--primary-color);
     padding: 2px 8px;
     border-radius: 12px;
-    font-size: 12px;
+    font-size: 11px;
     opacity: 0;
     transition: 0.3s;
     pointer-events: none;
     white-space: nowrap;
+    display: none; /* FORCE HIDDEN ON DESKTOP */
 }
 
 .link:hover .iconCircle {
@@ -174,10 +193,7 @@
     transform: scale(1.1);
     box-shadow: 0 0 15px var(--primary-color);
 }
-
-.link:hover .label {
-    opacity: 1;
-}
+/* No hover display for label on desktop since it is in center */
 
 /* Active item highlight */
 .submenu li.active .iconCircle {
@@ -188,6 +204,12 @@
 
 @media (max-width: 768px) {
     .navContainer.open .submenu li {
-        transform: rotate(var(--angle)) translate(100px) rotate(calc(var(--angle) * -1));
+        transform: rotate(var(--angle)) translate(110px) rotate(calc(var(--angle) * -1));
+    }
+    
+    /* On Mobile, show labels always below the icon since we cant hover to see them in center */
+    .label {
+        display: block;
+        opacity: 1;
     }
 }

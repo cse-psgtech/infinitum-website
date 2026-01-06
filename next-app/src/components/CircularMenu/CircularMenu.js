@@ -8,6 +8,7 @@ import styles from './CircularMenu.module.css';
 const MENU_ITEMS = [
     { label: 'Home', icon: 'ri-home-line', href: '/' },
     { label: 'About', icon: 'ri-user-line', href: '/about' },
+    { label: 'Schedule', icon: 'ri-calendar-line', href: '/schedule' },
     { label: 'Charity', icon: 'ri-heart-line', href: '/charity' },
     { label: 'Music', icon: 'ri-music-line', href: '/music' },
     { label: 'News', icon: 'ri-newspaper-line', href: '/news' },
@@ -16,6 +17,7 @@ const MENU_ITEMS = [
 export default function CircularMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [hoveredLabel, setHoveredLabel] = useState(null);
     const pathname = usePathname();
 
     useEffect(() => {
@@ -27,24 +29,26 @@ export default function CircularMenu() {
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
+        setHoveredLabel(null);
     };
 
     const handleItemClick = (index) => {
         setActiveIndex(index);
         setTimeout(() => {
             setIsOpen(false);
+            setHoveredLabel(null);
         }, 600);
     };
 
     const getItemStyle = (index) => {
         const total = MENU_ITEMS.length;
         const step = 360 / total;
-        // We want activeIndex to be at 90 degrees (down)
-        // angle = 90 + (index - activeIndex) * step
+        // Angle calculation
         const angle = 90 + (index - activeIndex) * step;
         
         return {
-            '--angle': `${angle}deg`
+            '--angle': `${angle}deg`,
+            '--i': index,
         };
     };
 
@@ -53,8 +57,14 @@ export default function CircularMenu() {
             <div className={styles.menuBackdrop} onClick={() => setIsOpen(false)} />
 
             <button className={styles.toggleBtn} onClick={toggleMenu}>
-                <i className={`ri-menu-3-line ${styles.menuIcon}`}></i>
-                <i className={`ri-close-line ${styles.closeIcon}`}></i>
+                {isOpen && hoveredLabel ? (
+                     <span className={styles.centerLabel}>{hoveredLabel}</span>
+                ) : (
+                    <>
+                        <i className={`ri-menu-3-line ${styles.menuIcon}`}></i>
+                        <i className={`ri-close-line ${styles.closeIcon}`}></i>
+                    </>
+                )}
             </button>
             <ul className={styles.submenu}>
                 {MENU_ITEMS.map((item, index) => (
@@ -67,6 +77,8 @@ export default function CircularMenu() {
                             href={item.href} 
                             className={styles.link}
                             onClick={() => handleItemClick(index)}
+                            onMouseEnter={() => setHoveredLabel(item.label)}
+                            onMouseLeave={() => setHoveredLabel(null)}
                         >
                             <div className={styles.iconCircle}>
                                 <i className={item.icon}></i>

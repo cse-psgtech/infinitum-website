@@ -127,13 +127,6 @@ class Component extends React.Component {
               onLinkStart={this.onLinkStart}
             />
             <span className={classes.dates}>FEB 13 & 14</span>
-            <Link
-              href='/schedule'
-              className={classes.scheduleLink}
-              onLinkStart={this.onLinkStart}
-            >
-              <Text>Schedule</Text>
-            </Link>
             <Menu
               className={classes.menu}
               animation={{ duration: { enter: 400 } }}
