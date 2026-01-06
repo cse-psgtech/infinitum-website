@@ -269,5 +269,115 @@ export const styles = theme => ({
     background: 'linear-gradient(135deg, #00E676 0%, #00C853 100%)', // Neon Green
     boxShadow: '0 0 15px rgba(0, 230, 118, 0.4)',
     '&:hover': { boxShadow: '0 0 25px rgba(0, 230, 118, 0.6)' }
+  },
+  awards: {
+    background: 'linear-gradient(135deg, #FFD700 0%, #FFA000 100%)', // Gold
+    boxShadow: '0 0 15px rgba(255, 215, 0, 0.4)',
+    '&:hover': { boxShadow: '0 0 25px rgba(255, 215, 0, 0.6)' }
+  },
+
+  // Mobile View Styles
+  // Mobile View Styles
+  desktopView: {
+    display: 'block',
+    '@media (max-width: 768px)': {
+      display: 'none'
+    }
+  },
+  mobileView: {
+    display: 'none',
+    width: '100%',
+    padding: '0 20px',
+    boxSizing: 'border-box',
+    '@media (max-width: 768px)': {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 30, // Increased gap for timeline flow
+      paddingLeft: 30 // Make space for the vertical line
+    }
+  },
+  mobileCategoryGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 20,
+    position: 'relative'
+  },
+  mobileCategoryTitle: {
+    color: theme.color.secondary.main,
+    fontSize: '1rem', // Slightly larger
+    textTransform: 'uppercase',
+    letterSpacing: '0.15em',
+    fontFamily: theme.typography.primary,
+    marginBottom: 10,
+    paddingLeft: 20, // Align with cards
+    textShadow: `0 0 10px ${rgba(theme.color.secondary.main, 0.5)}`
+  },
+  mobileEventWrapper: {
+    position: 'relative',
+    paddingLeft: 25 // Space for dot and line
+  },
+  // Glowing dot on the timeline
+  mobileTimelineDot: {
+    position: 'absolute',
+    left: 0,
+    top: 20, // Center vertically with first line of text roughly
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    background: theme.color.secondary.main,
+    boxShadow: `0 0 10px ${theme.color.secondary.main}, 0 0 20px ${theme.color.secondary.main}`,
+    zIndex: 1,
+    border: '2px solid #fff'
+  },
+  mobileEventCard: {
+    position: 'relative',
+    padding: '20px',
+    borderRadius: 12, // More rounded
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    background: 'rgba(25, 25, 25, 0.6)', // Darker, richer background
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    backdropFilter: 'blur(20px)', // Stronger blur
+    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.5)',
+    transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // Bouncy transition
+    overflow: 'hidden',
+    '&:hover': {
+      transform: 'translateY(-2px) scale(1.02)',
+      background: 'rgba(35, 35, 35, 0.7)',
+      borderColor: 'rgba(255, 255, 255, 0.3)'
+    },
+    '&:active': {
+      transform: 'scale(0.98)'
+    }
+  },
+  mobileEventHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: 10
+  },
+  mobileEventTitle: {
+    fontSize: '1.1rem',
+    fontWeight: 700,
+    color: '#fff',
+    fontFamily: theme.typography.primary,
+    letterSpacing: '0.05em',
+    lineHeight: 1.2,
+    textShadow: '0 0 10px rgba(0,0,0,0.5)'
+  },
+  mobileEventTime: {
+    fontSize: '0.8rem',
+    color: theme.color.secondary.main, // Colored time
+    fontFamily: theme.typography.secondary,
+    fontWeight: 600,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+    '& svg': {
+      fontSize: '1.1em'
+    }
   }
 });
