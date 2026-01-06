@@ -49,6 +49,20 @@ const styles = theme => ({
     maxWidth: '500px',
     filter: `drop-shadow(0 0 2px ${theme.color.secondary.main})`
   },
+  image: {
+    display: 'block',
+    margin: '0 auto',
+    border: 'none',
+    padding: '10px 0',
+    opacity: 0,
+    width: '100%',
+    maxWidth: '300px',
+    height: 'auto',
+    filter: `drop-shadow(0 0 2px ${theme.color.secondary.main})`,
+    '@media (min-width: 768px)': {
+      maxWidth: '500px'
+    }
+  },
   path: {
     fill: 'none',
     strokeWidth: 14,

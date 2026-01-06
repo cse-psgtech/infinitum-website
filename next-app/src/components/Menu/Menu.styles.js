@@ -4,17 +4,19 @@ import { SCHEME_EXPAND } from './Menu.constants';
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 16,
-    margin: [0, 'auto'],
-    userSelect: 'none'
+    margin: [0, 'auto', 20],
+    userSelect: 'none',
+    flexWrap: 'wrap'
   },
   item: {
     display: 'block',
     padding: [10, 0, 10],
-    width: '100%',
+    width: 'auto',
+    minWidth: '120px',
     lineHeight: 1,
     fontSize: 14,
     textAlign: 'center',
@@ -51,8 +53,8 @@ const styles = theme => ({
 
   '@media (min-width: 768px)': {
     root: {
-      flexDirection: 'row',
-      gap: 20
+      gap: 20,
+      margin: 0
     },
     item: {
       display: 'block'

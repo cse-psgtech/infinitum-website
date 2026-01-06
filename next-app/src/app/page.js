@@ -10,6 +10,10 @@ import { Brand } from '@/components/Brand';
 import { Menu } from '@/components/Menu';
 import { SocialLinks } from '@/components/SocialLinks';
 import { Legal } from '@/components/Legal';
+import { Link } from '@/components/Link';
+import { Text } from '@/components/Text';
+import { Header } from '@/components/Header';
+import PrizePool from '@/components/PrizePool/PrizePool';
 
 // Original had: import { Secuence } from '../components/Secuence';
 // Note: I need to ensure import paths are correct. @/ is src/
@@ -25,7 +29,8 @@ const styles = theme => {
       flexDirection: 'column',
       alignItems: 'center',
       margin: [0, 'auto'],
-      padding: 20
+      paddingTop: 120,
+      padding: [120, 20, 20, 20]
     },
     presenter: {
       fontFamily: theme.typography.secondary,
@@ -63,6 +68,29 @@ const styles = theme => {
       marginBottom: 30,
       textShadow: `0 0 12px ${theme.color.secondary.main}, 0 0 25px ${theme.color.secondary.dark}`
     },
+    scheduleLink: {
+      position: 'absolute',
+      top: 20,
+      right: 20,
+      display: 'inline-block',
+      marginBottom: 0,
+      padding: '12px 24px',
+      border: `2px solid ${theme.color.secondary.main}`,
+      backgroundColor: 'transparent',
+      fontFamily: theme.typography.primary,
+      fontSize: 14,
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em', // Adjusted to match likely Menu style
+      color: '#fff',
+      textDecoration: 'none',
+      transition: 'all 0.3s ease',
+      zIndex: 10, // Ensure it's on top
+      '&:hover': {
+        backgroundColor: theme.color.secondary.main,
+        color: '#fff',
+        boxShadow: `0 0 20px ${theme.color.secondary.main}`
+      }
+    },
     menu: {
       margin: [0, 'auto', 20],
       width: '100%',
@@ -93,28 +121,39 @@ class Component extends React.Component {
     const { classes } = this.props;
 
     return (
-      <SecuenceComponent ref={ref => (this.secuenceElement = ref)}>
-        <div className={classes.root}>
-          <div className={classes.content}>
-            <span className={classes.presenter}>Computer Science and Engineering Association Presents</span>
-            <Brand
-              className={classes.brand}
+      <>
+        <SecuenceComponent ref={ref => (this.secuenceElement = ref)}>
+          <div className={classes.root}>
+            <div className={classes.content}>
+              <span className={classes.presenter}>Computer Science and Engineering Association</span>
+              <span className={classes.presenter}>Presents</span>
+              <Brand
+                className={classes.brand}
+                onLinkStart={this.onLinkStart}
+              />
+              <span className={classes.dates}>FEB 13 & 14</span>
+              {/* <Link
+              href='/schedule'
+              className={classes.scheduleLink}
               onLinkStart={this.onLinkStart}
-            />
-            <span className={classes.dates}>FEB 13 & 14</span>
-            <Menu
-              className={classes.menu}
-              animation={{ duration: { enter: 400 } }}
-              scheme='expand'
-              onLinkStart={this.onLinkStart}
-            />
-            <SocialLinks
-              className={classes.social}
-              onLinkStart={this.onLinkStart}
-            />
+            >
+              <Text>Schedule</Text>
+            </Link> */}
+              <Menu
+                className={classes.menu}
+                animation={{ duration: { enter: 400 } }}
+                scheme='expand'
+                onLinkStart={this.onLinkStart}
+              />
+              <SocialLinks
+                className={classes.social}
+                onLinkStart={this.onLinkStart}
+              />
+            </div>
+            <PrizePool />
           </div>
-        </div>
-      </SecuenceComponent>
+        </SecuenceComponent>
+      </>
     );
   }
 }

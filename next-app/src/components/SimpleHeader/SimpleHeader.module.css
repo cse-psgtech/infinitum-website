@@ -3,21 +3,113 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 80px;
+    height: 120px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    z-index: 900; /* Below the menu button (1000) */
-    pointer-events: none; /* Let clicks pass through to content if header is transparent */
+    padding: 0 25px;
+    z-index: 900;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%);
+    box-sizing: border-box;
 }
 
-.title {
-    font-family: var(--font-orbitron), sans-serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: #eeeeee; /* Theme text main */
-    text-transform: uppercase;
-    letter-spacing: 2px;
+/* Left section - Infinitum logo */
+.leftSection {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     pointer-events: auto;
-    text-shadow: 0 0 10px rgba(199, 32, 113, 0.5);
+    margin-left: 70px;
+}
+
+.logo {
+    width: 160px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(199, 32, 113, 0.4));
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 15px rgba(199, 32, 113, 0.7));
+}
+
+/* Right section - Org logos and menu */
+.rightSection {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    pointer-events: auto;
+}
+
+.orgLogos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.orgLogo {
+    width: 50px;
+    height: 50px;
+    margin-top: 15px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.25));
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.orgLogo:hover {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 12px rgba(199, 32, 113, 0.6));
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .header {
+        padding: 0 18px;
+        height: 100px;
+    }
+
+    .logo {
+        width: 100px;
+    }
+
+    .rightSection {
+        gap: 14px;
+    }
+
+    .orgLogos {
+        gap: 12px;
+    }
+
+    .orgLogo {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0 12px;
+        height: 80px;
+    }
+
+    .logo {
+        width: 80px;
+    }
+
+    .rightSection {
+        gap: 10px;
+    }
+
+    .orgLogos {
+        gap: 8px;
+    }
+
+    .orgLogo {
+        width: 26px;
+        height: 26px;
+    }
 }

@@ -317,7 +317,7 @@ class Component extends React.Component {
         </svg>
         <div className={classes.content}>
           <Secuence animation={{ show, independent: true }}>
-            <Brand className={classes.brand} stableTime />
+            <Brand className={classes.brand} stableTime variant="image" />
             <Menu className={classes.menu} />
           </Secuence>
         </div>

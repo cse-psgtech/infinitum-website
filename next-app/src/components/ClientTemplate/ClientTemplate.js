@@ -86,7 +86,7 @@ const Template = (props) => {
         );
     };
 
-    const isURLContent = ['/news', '/music', '/charity', '/events'].find(path => {
+    const isURLContent = ['/news', '/music', '/charity', '/events', '/schedule'].find(path => {
         return pathname.startsWith(path);
     });
 
@@ -99,7 +99,7 @@ const Template = (props) => {
                 {...backgroundProps}
                 animation={{ show, ...(backgroundProps.animation || {}) }}
             >
-                {isURLContent ? <App>{children}</App> : children}
+                {show && (isURLContent ? <App>{children}</App> : children)}
 
                 {!show && !hasSeenPopup && (
                     <div className={classes.enterOverlay}>
