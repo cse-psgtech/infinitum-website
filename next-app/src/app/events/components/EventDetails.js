@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@/tools/withStyles';
+import { SoundsContext } from '@/components/SoundsContext';
 import { Text } from '@/components/Text';
 
 const styles = theme => ({
@@ -22,6 +23,10 @@ const styles = theme => ({
         marginBottom: 20,
         gap: 20,
         animation: '$fadeIn 0.4s ease-out',
+        '@media (max-width: 600px)': {
+            flexDirection: 'column',
+            alignItems: 'stretch',
+        },
     },
     headerContent: {
         flex: 1,
@@ -43,6 +48,9 @@ const styles = theme => ({
         color: theme.color.text.primary,
         fontFamily: theme.typography.primary,
         lineHeight: 1.2,
+        '@media (max-width: 768px)': {
+            fontSize: 22,
+        },
     },
     oneLiner: {
         color: theme.color.primary.main,
@@ -53,7 +61,7 @@ const styles = theme => ({
         margin: 0,
     },
     registerButton: {
-        padding: '12px 28px',
+        padding: '14px 32px',
         backgroundColor: 'transparent',
         border: `2px solid ${theme.color.primary.main}`,
         color: theme.color.primary.main,
@@ -68,6 +76,15 @@ const styles = theme => ({
         '&:hover': {
             backgroundColor: theme.color.primary.main,
             color: theme.color.background.dark,
+            transform: 'scale(1.05)',
+            boxShadow: `0 0 20px ${theme.color.primary.main}`,
+        },
+        '&:active': {
+            transform: 'scale(0.98)',
+        },
+        '@media (max-width: 600px)': {
+            width: '100%',
+            marginTop: 15,
         },
     },
     closedBadge: {
@@ -104,43 +121,95 @@ const styles = theme => ({
         margin: 0,
     },
 
-    // Info Grid
-    infoGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: 12,
+    // Start of Split Layout
+    splitLayout: {
+        display: 'flex',
+        gap: 30,
         marginBottom: 25,
         animation: '$fadeIn 0.4s ease-out 0.2s both',
-        '@media (max-width: 600px)': {
-            gridTemplateColumns: '1fr',
+        '@media (max-width: 900px)': {
+            flexDirection: 'column',
+            gap: 20,
         },
     },
+    leftColumn: {
+        flex: '0 0 250px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 15,
+        '@media (max-width: 1200px)': {
+            flex: '0 0 200px',
+        },
+        '@media (max-width: 900px)': {
+            flex: '1 1 auto',
+            width: '100%',
+        },
+    },
+    rightColumn: {
+        flex: 1,
+        minWidth: 0, // Prevent flex item from overflowing
+    },
+
+    // Info Grid -> Changed to Info Stack for left column
+    infoStack: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 15,
+    },
     infoItem: {
-        padding: 15,
+        padding: 10, // Reduced from 15px to make boxes slightly shorter/more horizontal
         border: `1px solid ${theme.color.primary.dark}`,
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
     },
     infoLabel: {
-        fontSize: 9,
+        fontSize: 10,
         color: theme.color.text.secondary,
         textTransform: 'uppercase',
-        letterSpacing: 1,
-        marginBottom: 5,
+        letterSpacing: 1.5,
+        marginBottom: 8,
     },
     infoValue: {
-        fontSize: 14,
+        fontSize: 16,
         color: theme.color.text.primary,
         fontWeight: 'bold',
+        fontFamily: theme.typography.primary,
     },
 
     // Unique Rounds Timeline
     roundsSection: {
-        marginBottom: 25,
-        animation: '$fadeIn 0.4s ease-out 0.3s both',
+        // Remove margins that might mess up top alignment
+        marginTop: 0,
+        height: '100%',
+    },
+    roundsHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 15,
+        // Match the top padding of infoItem (15px) so text aligns visualy
+        paddingTop: 8,
+        paddingLeft: 5, // Slight adjustment for visual balance
+    },
+    roundsTitle: {
+        fontSize: 12,
+        color: theme.color.text.secondary,
+        textTransform: 'uppercase',
+        letterSpacing: 2,
+        fontWeight: 'bold',
+        margin: 0,
+    },
+    roundsCount: {
+        fontSize: 12,
+        color: theme.color.primary.main,
+        fontWeight: 'bold',
     },
     roundsTimeline: {
         position: 'relative',
-        marginLeft: 15,
+        marginLeft: 10,
+        paddingTop: 5, // Slight adjustment for visual balance
     },
     // Main vertical line
     timelineLine: {
@@ -204,23 +273,42 @@ const styles = theme => ({
         border: `1px solid ${theme.color.primary.dark}`,
         borderLeft: `3px solid ${theme.color.primary.main}`,
         transition: 'all 0.3s ease',
+        cursor: 'default',
         '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             borderLeftColor: theme.color.primary.main,
+            transform: 'translateX(5px)',
+        },
+        '&:hover $roundDescription': {
+            maxHeight: '200px', // Allow expansion
+            opacity: 1,
+            marginTop: 10,
         },
     },
     roundTitle: {
         fontSize: 15,
         color: theme.color.text.primary,
         fontWeight: 'bold',
-        marginBottom: 8,
+        marginBottom: 4, // Reduced to sit closer to tagline
         fontFamily: theme.typography.primary,
+    },
+    roundTagline: {
+        fontSize: 12,
+        color: theme.color.primary.main,
+        fontStyle: 'italic',
+        marginBottom: 0,
+        fontFamily: theme.typography.primary,
+        letterSpacing: 0.5,
     },
     roundDescription: {
         fontSize: 12,
         color: theme.color.text.secondary,
         lineHeight: 1.6,
         margin: 0,
+        maxHeight: 0,
+        opacity: 0,
+        overflow: 'hidden',
+        transition: 'all 0.4s ease-out',
     },
 
     // Rules Section
@@ -258,6 +346,12 @@ const styles = theme => ({
         padding: 12,
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
         border: `1px solid ${theme.color.primary.dark}`,
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            borderColor: theme.color.primary.main,
+        },
     },
     contactAvatar: {
         width: 36,
@@ -327,6 +421,22 @@ class EventDetails extends React.Component {
         loading: PropTypes.bool,
     };
 
+    static contextType = SoundsContext;
+
+    handleHover = () => {
+        const sounds = this.context;
+        if (sounds?.hover) {
+            sounds.hover.play();
+        }
+    };
+
+    handleClick = () => {
+        const sounds = this.context;
+        if (sounds?.click) {
+            sounds.click.play();
+        }
+    };
+
     formatDate = (dateStr) => {
         if (!dateStr) return 'TBA';
         const date = new Date(dateStr);
@@ -376,7 +486,11 @@ class EventDetails extends React.Component {
                     {event.closed ? (
                         <div className={classes.closedBadge}>Closed</div>
                     ) : (
-                        <button className={classes.registerButton}>
+                        <button
+                            className={classes.registerButton}
+                            onMouseEnter={this.handleHover}
+                            onClick={this.handleClick}
+                        >
                             Register
                         </button>
                     )}
@@ -390,52 +504,71 @@ class EventDetails extends React.Component {
                     </div>
                 )}
 
-                {/* Info Grid */}
-                <div className={classes.infoGrid}>
-                    <div className={classes.infoItem}>
-                        <div className={classes.infoLabel}>Date</div>
-                        <div className={classes.infoValue}>{this.formatDate(event.date)}</div>
-                    </div>
-                    <div className={classes.infoItem}>
-                        <div className={classes.infoLabel}>Timing</div>
-                        <div className={classes.infoValue}>{event.timing || 'TBA'}</div>
-                    </div>
-                    <div className={classes.infoItem}>
-                        <div className={classes.infoLabel}>Venue</div>
-                        <div className={classes.infoValue}>{event.hall || 'TBA'}</div>
-                    </div>
-                    <div className={classes.infoItem}>
-                        <div className={classes.infoLabel}>Team Size</div>
-                        <div className={classes.infoValue}>{event.teamSize || 1} Members</div>
-                    </div>
-                </div>
+                {/* Split Layout: Info (Left) & Rounds (Right) */}
+                <div className={classes.splitLayout}>
+                    {/* Left Column: Team Size, Venue, Timing */}
+                    <div className={classes.leftColumn}>
+                        <div className={classes.infoStack}>
+                            {/* Team Size - First for alignment */}
+                            <div className={classes.infoItem}>
+                                <div className={classes.infoLabel}>Team Size</div>
+                                <div className={classes.infoValue}>{event.teamSize || 1} Members</div>
+                            </div>
 
-                {/* Rounds with Unique Timeline */}
-                {event.rounds && event.rounds.length > 0 && (
-                    <div className={classes.roundsSection}>
-                        <h3 className={classes.sectionTitle}>Rounds</h3>
-                        <div className={classes.roundsTimeline}>
-                            {/* Vertical connecting line */}
-                            {event.rounds.length > 1 && (
-                                <div className={classes.timelineLine} />
-                            )}
-                            {event.rounds.map((round, index) => (
-                                <div key={round._id || index} className={classes.roundItem}>
-                                    {/* Timeline dot with number */}
-                                    <div className={classes.roundDot}>
-                                        <div className={classes.roundDotInner} />
-                                        <div className={classes.roundNumber}>{index + 1}</div>
-                                    </div>
-                                    {/* Round content card */}
-                                    <div className={classes.roundCard}>
-                                        <div className={classes.roundTitle}>{round.title}</div>
-                                        <p className={classes.roundDescription}>{round.description}</p>
-                                    </div>
-                                </div>
-                            ))}
+                            <div className={classes.infoItem}>
+                                <div className={classes.infoLabel}>Venue</div>
+                                <div className={classes.infoValue}>{event.hall || 'TBA'}</div>
+                            </div>
+
+                            <div className={classes.infoItem}>
+                                <div className={classes.infoLabel}>Timing</div>
+                                <div className={classes.infoValue}>{event.timing || 'TBA'}</div>
+                            </div>
                         </div>
                     </div>
-                )}
+
+                    {/* Right Column: Rounds */}
+                    <div className={classes.rightColumn}>
+                        {event.rounds && event.rounds.length > 0 ? (
+                            <div className={classes.roundsSection}>
+                                <div className={classes.roundsHeader}>
+                                    <h3 className={classes.roundsTitle}>Rounds</h3>
+                                    <span className={classes.roundsCount}>{event.rounds.length} Rounds</span>
+                                </div>
+                                <div className={classes.roundsTimeline}>
+                                    {/* Vertical connecting line */}
+                                    {event.rounds.length > 1 && (
+                                        <div className={classes.timelineLine} />
+                                    )}
+                                    {event.rounds.map((round, index) => (
+                                        <div key={round._id || index} className={classes.roundItem}>
+                                            {/* Timeline dot with number */}
+                                            <div className={classes.roundDot}>
+                                                <div className={classes.roundDotInner} />
+                                                <div className={classes.roundNumber}>{index + 1}</div>
+                                            </div>
+                                            {/* Round content card */}
+                                            <div className={classes.roundCard}>
+                                                <div className={classes.roundTitle}>{round.title}</div>
+                                                {round.tagline && (
+                                                    <div className={classes.roundTagline}>{round.tagline}</div>
+                                                )}
+                                                <p className={classes.roundDescription}>{round.description}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={classes.roundsSection}>
+                                <div className={classes.roundsHeader}>
+                                    <h3 className={classes.roundsTitle}>Rounds</h3>
+                                </div>
+                                <Text style={{ fontStyle: 'italic', opacity: 0.7 }}>No specific rounds information available.</Text>
+                            </div>
+                        )}
+                    </div>
+                </div>
 
                 {/* Rules */}
                 {event.eventRules && (

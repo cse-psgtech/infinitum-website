@@ -2,200 +2,206 @@
 export const eventsData = [
     {
         eventId: "EVNT01",
-        eventName: "Hackathon Supreme",
-        category: "Technical",
-        oneLineDescription: "Code. Create. Conquer.",
-        description: "Build innovative solutions to real-world problems in this 24-hour coding marathon. Team up with fellow developers and showcase your skills to win exciting prizes.",
+        eventName: "QuestX",
+        category: "Non Technical",
+        oneLineDescription: "Fun and challenging activities to boost creativity, analytical skills, and teamwork",
+        description: "QuestX is a non-technical event designed to engage participants through fun yet challenging activities that enhance creativity, analytical thinking, teamwork, and problem-solving skills in an interactive environment.",
         rounds: [
             {
-                title: "Round 1 – Ideation & Pitch",
-                description: "Present your idea to the judges and get feedback on feasibility and innovation."
+                title: "Round 1 – Creative & Fun Challenges",
+                tagline: "Think fast, laugh harder, and let creativity lead the way.",
+                description: "Includes Limbo, Memory Game, Grid Game with mini dares, Pictionary, Emoji Decoding, Connections, and Meme Creation to encourage innovation, humour, observation skills, and collaboration.",
+                _id: { "$oid": "694ce9c4297836cde7682480" }
             },
             {
-                title: "Round 2 – Development Sprint",
-                description: "24-hour coding marathon to build your solution with full technical support."
-            },
-            {
-                title: "Round 3 – Final Presentation",
-                description: "Showcase your working prototype and compete for the top prizes."
+                title: "Round 2 – Escape Room Challenge",
+                tagline: "Every clue counts when the clock is ticking.",
+                description: "Participants use personal belongings to solve puzzles and unlock clues, testing teamwork, strategic thinking, and problem-solving under pressure.",
+                _id: { "$oid": "694ce9c4297836cde7682481" }
             }
         ],
         contacts: [
-            {
-                name: "Technical Lead",
-                mobile: "9876543210"
-            },
-            {
-                name: "Event Coordinator",
-                mobile: "9876543211"
-            }
+            { name: "Neelesh Padmanabh", mobile: "8148401083", _id: { "$oid": "694ce9c4297836cde7682482" } },
+            { name: "Atul Vasanthakrishnan", mobile: "9345722948", _id: { "$oid": "694ce9c4297836cde7682483" } }
         ],
-        hall: "Main Auditorium",
-        eventRules: "Teams of 2-4 members. Original code only. All decisions by judges are final.",
+        hall: "Q Block Classroom",
+        eventRules: "Participants must follow organiser instructions and maintain sportsmanship throughout the event.",
         teamSize: 4,
         date: "2026-02-13T09:00:00.000Z",
         closed: false,
-        timing: "9:00 AM - 9:00 AM (Next Day)",
-        youtubeUrl: "",
-        image: "/images/events/hackathon.png"
+        timing: "09:00 AM - 12:00 PM",
+        image: "/images/events/paper_presentation.png"
     },
     {
         eventId: "EVNT02",
-        eventName: "Code Combat",
-        category: "Competitive",
-        oneLineDescription: "Battle of Algorithms",
-        description: "Test your competitive programming skills in this intense coding battle. Solve complex algorithmic problems against the clock and rise to the top of the leaderboard.",
+        eventName: "neXus",
+        category: "Technical",
+        oneLineDescription: "Marvel-themed beginner-friendly cybersecurity CTF with mission-based challenges",
+        description: "neXus is a Marvel-themed Capture The Flag (CTF) event consisting of six mission-based cybersecurity challenges designed to build foundational technical skills, teamwork, and confidence through hands-on learning.",
         rounds: [
             {
-                title: "Round 1 – Qualification",
-                description: "Solve basic to intermediate problems to qualify for the finals."
-            },
-            {
-                title: "Round 2 – Finals",
-                description: "Advanced algorithmic challenges for the top performers."
+                title: "Infinity Stone Missions",
+                tagline: "Collect the flags. Restore balance to the system.",
+                description: "Six beginner-friendly cybersecurity challenges covering cryptography, DNS lookup, log analysis, steganography, timestamp conversion, and web inspection. Participants capture flags and document solutions with screenshots.",
+                _id: { "$oid": "694ce9d2297836cde7682489" }
             }
         ],
         contacts: [
-            {
-                name: "Competitive Lead",
-                mobile: "9876543212"
-            }
+            { name: "Karthick J S", mobile: "9042480747" },
+            { name: "Pravith", mobile: "9843243610" }
         ],
-        hall: "Computer Lab 1",
-        eventRules: "Individual participation. No internet access during contest. Use of pre-written code templates allowed.",
-        teamSize: 1,
-        date: "2026-02-13T14:00:00.000Z",
-        closed: false,
-        timing: "2:00 PM - 5:00 PM",
-        youtubeUrl: "",
-        image: "/images/events/code_competition.png"
+        hall: "AIR Lab",
+        teamSize: 3,
+        date: "2026-02-13T13:00:00.000Z",
+        timing: "01:00 PM - 04:00 PM",
+        image: "/images/events/paper_presentation.png"
     },
     {
         eventId: "EVNT03",
         eventName: "Git Wars",
         category: "Non Technical",
         oneLineDescription: "Clone. Commit. Conquer",
-        description: "Git Wars is a two-round interactive event that blends creativity, communication, strategy, and basic technical thinking. With a Star Wars theme, participants compete as teams in progressive rounds where early performance directly impacts later advantages, fostering teamwork, improvisation, and decision-making in a fun and competitive environment.",
+        description: "Git Wars is a two-round interactive event that blends creativity, communication, strategy, and basic technical thinking.",
         rounds: [
             {
-                title: "Round 1 – Code Charades (The Droid's Transmission)",
-                description: "Participants act out computer science-related terms using gestures only, with added constraints from Bug Cards. Points earned convert into strategic advantages for the next round."
+                title: "Code Charades",
+                tagline: "Act it out before the signal is lost.",
+                description: "Participants act out computer science-related terms using gestures only, with added constraints from Bug Cards. Points earned convert into strategic advantages for the next round.",
+                _id: { "$oid": "694cec9c297836cde7682491" }
             },
             {
-                title: "Round 2 – Deal or No Deal: CS Edition (The Asteroid Field)",
-                description: "Teams answer a mix of technical and non-technical questions and use advantages earned in Round 1 to select cups containing hidden points, introducing risk-taking and strategy."
+                "title": "Flash Memory",
+                "tagline": "Risk smart or crash into chaos.",
+                "description": "Teams answer questions and use advantages earned in Round 1 to select cups containing hidden points.",
+                _id: { "$oid": "694cec9c297836cde7682492" }
             }
         ],
-        contacts: [
-            {
-                name: "Srimathikalpana T",
-                mobile: "8122966128"
-            },
-            {
-                name: "Suryaprakash B",
-                mobile: "7339143171"
-            }
-        ],
-        hall: "G Block Classroom",
-        eventRules: "Teams must follow organiser instructions. Judging is based on accuracy, time, creativity, team synergy, and effective use of advantages. Organisers' decisions are final.",
         teamSize: 4,
+        hall: "Computer Lab 3",
         date: "2026-02-14T09:00:00.000Z",
-        closed: false,
-        timing: "To be announced",
-        youtubeUrl: "",
-        image: "/images/events/quiz.png"
+        timing: "09:00 AM - 12:00 PM",
+        image: "/images/events/paper_presentation.png"
     },
     {
         eventId: "EVNT04",
-        eventName: "Tech Workshop",
-        category: "Learning",
-        oneLineDescription: "Learn. Build. Innovate.",
-        description: "Hands-on learning with industry experts covering the latest technologies and frameworks. Perfect for beginners and intermediate developers looking to upskill.",
+        eventName: "ForceCoders",
+        category: "Technical",
+        oneLineDescription: "Code like Tourist. Hack like a Grandmaster.",
+        description: "A competitive coding event where speed and logic decide survival, followed by a hacking phase where you break others' code.",
         rounds: [
             {
-                title: "Session 1 – Theory & Fundamentals",
-                description: "Learn core concepts and best practices from experienced professionals."
+                title: "Round 1 – Coding Phase",
+                tagline: "Speed, logic, and precision decide survival.",
+                description: "Participants solve competitive programming problems ranging from easy to hard.",
+                _id: { "$oid": "694ceca6297836cde768249a" }
             },
             {
-                title: "Session 2 – Hands-on Practice",
-                description: "Build real-world projects with guidance from mentors."
+                title: "Round 2 – Hacking Phase",
+                tagline: "Break the code before it breaks you.",
+                description: "Participants attempt to hack other contestants' accepted solutions.",
+                _id: { "$oid": "694ceca6297836cde768249b" }
             }
         ],
-        contacts: [
-            {
-                name: "Workshop Coordinator",
-                mobile: "9876543213"
-            }
-        ],
-        hall: "Seminar Hall",
-        eventRules: "Individual participation. Bring your own laptop. All materials will be provided.",
-        teamSize: 1,
-        date: "2026-02-13T10:00:00.000Z",
-        closed: false,
-        timing: "10:00 AM - 4:00 PM",
-        youtubeUrl: "",
-        image: "/images/events/workshop.png"
+        teamSize: 2,
+        hall: "Programming Lab 1",
+        date: "2026-02-14T13:00:00.000Z",
+        timing: "01:00 PM - 04:00 PM",
+        image: "/images/events/paper_presentation.png"
     },
     {
         eventId: "EVNT05",
-        eventName: "Tech Talk",
-        category: "Learning",
-        oneLineDescription: "Inspire. Innovate. Impact.",
-        description: "Inspiring talks from tech leaders sharing their journey, insights, and vision for the future of technology.",
+        eventName: "Open Quiz",
+        category: "Quiz",
+        oneLineDescription: "Master the prompt, control the output.",
+        description: "A multi-round quiz testing your skills in AI prompting, financial strategy, and puzzle solving.",
         rounds: [
             {
-                title: "Keynote Session",
-                description: "Hear from industry leaders about cutting-edge technology and career insights."
+                title: "Round 1 – Prompt Engineer Battle",
+                tagline: "Master the prompt, control the output.",
+                description: "Teams reverse-engineer AI-generated images by writing prompts.",
+                _id: { "$oid": "694ced34297836cde76824a4" }
             },
             {
-                title: "Q&A Session",
-                description: "Interactive session where you can ask questions and network with speakers."
-            }
-        ],
-        contacts: [
+                title: "Round 2 – Stock Market Quiz",
+                tagline: "Bet smart. Think smarter.",
+                description: "Teams wager virtual coins before answering questions.",
+                _id: { "$oid": "694ced34297836cde76824a5" }
+            },
             {
-                name: "Events Team",
-                mobile: "9876543214"
+                title: "Round 3 – Phygital Escape Quiz",
+                tagline: "Decode reality, unlock the exit.",
+                description: "Participants solve physical and digital puzzles using QR codes and clues.",
+                _id: { "$oid": "694ced34297836cde76824a6" }
             }
         ],
-        hall: "Main Auditorium",
-        eventRules: "Open to all. First come first serve seating.",
-        teamSize: 1,
-        date: "2026-02-14T14:00:00.000Z",
-        closed: false,
-        timing: "2:00 PM - 4:00 PM",
-        youtubeUrl: "",
-        image: "/images/events/tech_talk.png"
+        teamSize: 3,
+        hall: "Seminar Hall A",
+        date: "2026-02-13T10:00:00.000Z",
+        timing: "10:00 AM - 01:00 PM",
+        image: "/images/events/paper_presentation.png"
     },
     {
         eventId: "EVNT06",
-        eventName: "Paper Presentation",
-        category: "Academic",
-        oneLineDescription: "Research. Present. Excel.",
-        description: "Present your innovative research ideas and compete with fellow researchers. Showcase your academic prowess and win recognition.",
+        eventName: "CodeMania",
+        category: "Technical",
+        oneLineDescription: "Turn slow code into lightning-fast logic.",
+        description: "Optimize inefficient code and bid wisely on questions to prove your mastery.",
         rounds: [
             {
-                title: "Round 1 – Abstract Review",
-                description: "Submit your research abstract for preliminary evaluation."
+                title: "Round 1 – The Optimization Arena",
+                tagline: "Turn slow code into lightning-fast logic.",
+                description: "Participants optimize inefficient code to meet strict time limits.",
+                _id: { "$oid": "695a38a48baa56af32706870" }
             },
             {
-                title: "Round 2 – Presentation",
-                description: "Present your complete research work to a panel of judges."
+                title: "Round 2 – Strategic Bidding Challenge",
+                tagline: "Bid wisely or lose it all.",
+                description: "Teams bid virtual currency on questions of varying difficulty.",
+                _id: { "$oid": "695a38a48baa56af32706871" }
             }
         ],
-        contacts: [
-            {
-                name: "Academic Coordinator",
-                mobile: "9876543215"
-            }
-        ],
-        hall: "Conference Room",
-        eventRules: "Teams of 1-3 members. Original research only. Plagiarism will lead to disqualification.",
-        teamSize: 3,
+        teamSize: 1,
+        hall: "Main Auditorium",
         date: "2026-02-14T10:00:00.000Z",
-        closed: false,
-        timing: "10:00 AM - 2:00 PM",
-        youtubeUrl: "",
+        timing: "10:00 AM - 01:00 PM",
+        image: "/images/events/paper_presentation.png"
+    },
+    {
+        eventId: "EVNT07",
+        eventName: "Thooral Hackathon",
+        category: "Technical",
+        oneLineDescription: "Great ideas begin with bold thinking.",
+        description: "A comprehensive hackathon journey from ideation and pitching to documentation and final implementation.",
+        rounds: [
+            {
+                title: "Ideation & Pitching",
+                tagline: "Great ideas begin with bold thinking.",
+                description: "Teams analyze problems and pitch innovative solutions.",
+                _id: { "$oid": "695a3d878baa56af3270688c" }
+            },
+            {
+                title: "Documentation & System Design",
+                tagline: "Design it right before you build it.",
+                description: "Participants prepare SRS documents and UML diagrams.",
+                _id: { "$oid": "695a3d878baa56af3270688d" }
+            },
+            {
+                title: "Implementation Phase",
+                tagline: "From paper to production.",
+                description: "Teams develop working prototypes or applications.",
+                _id: { "$oid": "695a3d878baa56af3270688e" }
+            },
+            {
+                title: "Final Presentation",
+                tagline: "Show the world what you built.",
+                description: "Teams present solutions, design decisions, and impact.",
+                _id: { "$oid": "695a3d878baa56af3270688f" }
+            }
+        ],
+        teamSize: 4,
+        hall: "Innovation Center",
+        date: "2026-02-13T09:00:00.000Z",
+        timing: "09:00 AM - 04:00 PM",
         image: "/images/events/paper_presentation.png"
     }
 ];

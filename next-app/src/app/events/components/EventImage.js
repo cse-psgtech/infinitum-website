@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@/tools/withStyles';
+import { CometCard } from '@/components/ui/comet-card';
 
 const styles = theme => ({
     root: {
@@ -11,7 +12,6 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
-        // No background - transparent
     },
     imageWrapper: {
         width: '100%',
@@ -19,45 +19,53 @@ const styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        '@media (max-width: 768px)': {
+            maxWidth: 250,
+        },
     },
     card: {
         width: 220,
         height: 300,
-        backgroundColor: 'transparent',
-        border: `1px solid ${theme.color.primary.dark}`,
-        borderRadius: 4,
+        backgroundColor: '#0a0a0a',
+        borderRadius: 16,
         overflow: 'hidden',
-        // Slight 3D rotation for depth effect
-        transform: 'rotateY(15deg)',
         transformStyle: 'preserve-3d',
-        transition: 'all 0.4s ease',
+        '@media (max-width: 768px)': {
+            width: 200,
+            height: 270,
+        },
     },
     imageContainer: {
         width: '100%',
         height: '75%',
-        backgroundColor: 'transparent',
+        backgroundColor: '#111',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
+        position: 'relative',
     },
     image: {
         width: '100%',
         height: '100%',
         objectFit: 'cover',
+        position: 'relative',
+        zIndex: 2,
     },
     placeholder: {
         fontSize: 64,
         opacity: 0.5,
+        zIndex: 2,
     },
     info: {
         padding: 12,
         textAlign: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
         height: '25%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        borderTop: `1px solid ${theme.color.primary.dark}`,
     },
     title: {
         fontSize: 14,
@@ -68,12 +76,18 @@ const styles = theme => ({
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+        '@media (max-width: 768px)': {
+            fontSize: 12,
+        },
     },
     category: {
         fontSize: 10,
         color: theme.color.primary.main,
         textTransform: 'uppercase',
         letterSpacing: 1,
+        '@media (max-width: 768px)': {
+            fontSize: 9,
+        },
     },
 });
 
@@ -93,23 +107,24 @@ class EventImage extends React.Component {
         return (
             <div className={classes.root}>
                 <div className={classes.imageWrapper}>
-                    <div className={classes.card}>
-                        <div className={classes.imageContainer}>
-                            {event.image ? (
+                    <CometCard
+                        borderColor="rgba(199, 32, 113, 0.7)"
+                        glowColor="rgba(199, 32, 113, 0.5)"
+                    >
+                        <div className={classes.card}>
+                            <div className={classes.imageContainer}>
                                 <img
-                                    src={event.image}
+                                    src="/images/events/paper_presentation.png"
                                     alt={event.eventName}
                                     className={classes.image}
                                 />
-                            ) : (
-                                <span className={classes.placeholder}>🎯</span>
-                            )}
+                            </div>
+                            <div className={classes.info}>
+                                <div className={classes.title}>{event.eventName}</div>
+                                <div className={classes.category}>{event.category}</div>
+                            </div>
                         </div>
-                        <div className={classes.info}>
-                            <div className={classes.title}>{event.eventName}</div>
-                            <div className={classes.category}>{event.category}</div>
-                        </div>
-                    </div>
+                    </CometCard>
                 </div>
             </div>
         );

@@ -1,0 +1,129 @@
+.cometCard {
+    position: relative;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #1F2121 0%, #0a0a0a 100%);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        box-shadow 0.4s ease;
+}
+
+/* Hover effect - scale and glow */
+.cometCard:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 20px 40px rgba(199, 32, 113, 0.4),
+        0 0 60px rgba(199, 32, 113, 0.2);
+}
+
+.cometGlow {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(135deg,
+            rgba(199, 32, 113, 0.6) 0%,
+            rgba(255, 215, 0, 0.4) 25%,
+            rgba(199, 32, 113, 0.2) 50%,
+            transparent 75%);
+    background-size: 200% 200%;
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: cometRotate 4s linear infinite;
+    transition: opacity 0.3s ease;
+}
+
+/* Intensify glow on hover */
+.cometCard:hover .cometGlow {
+    animation: cometRotateFast 1.5s linear infinite;
+    opacity: 1;
+}
+
+.cometContent {
+    position: relative;
+    z-index: 1;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    padding: 8px;
+    transition: background 0.3s ease;
+}
+
+/* Lighten content background on hover */
+.cometCard:hover .cometContent {
+    background: linear-gradient(135deg, #252525 0%, #151515 100%);
+}
+
+@keyframes cometRotate {
+    0% {
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg);
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+        filter: hue-rotate(360deg);
+    }
+}
+
+/* Faster rotation for hover state */
+@keyframes cometRotateFast {
+    0% {
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg) brightness(1.2);
+    }
+
+    50% {
+        background-position: 100% 50%;
+        filter: hue-rotate(180deg) brightness(1.4);
+    }
+
+    100% {
+        background-position: 0% 50%;
+        filter: hue-rotate(360deg) brightness(1.2);
+    }
+}
+
+/* Additional glow effect */
+.cometCard::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 18px;
+    background: linear-gradient(45deg,
+            rgba(199, 32, 113, 0.3),
+            transparent 40%,
+            transparent 60%,
+            rgba(255, 215, 0, 0.3));
+    filter: blur(8px);
+    opacity: 0.6;
+    animation: pulseGlow 3s ease-in-out infinite;
+    z-index: -1;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+/* Intensify outer glow on hover */
+.cometCard:hover::before {
+    opacity: 1;
+    filter: blur(15px);
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
