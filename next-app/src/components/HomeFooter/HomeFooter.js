@@ -34,7 +34,7 @@ const contactSections = [
     {
         title: 'Accommodation (Boys)',
         contacts: [
-            { name: 'Rohith Sarveshaa', phone: '+91 8610272023' },
+            { name: 'Rohith Sarvesaa', phone: '+91 8610272023' },
             { name: 'Karthick Saravanan', phone: '+91 8056936690' },
         ]
     },
@@ -42,7 +42,7 @@ const contactSections = [
         title: 'Accommodation (Girls)',
         contacts: [
             { name: 'Kanishka', phone: '+91 8838401957' },
-            { name: 'Thejashree N', phone: '+91 9842119832' }
+            { name: 'Thejashri N', phone: '+91 9842119832' }
         ]
     }
 ];

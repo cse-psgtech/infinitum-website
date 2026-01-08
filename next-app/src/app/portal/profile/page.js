@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { QRCodeSVG } from 'qrcode.react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import api from '@/services/api'; 
+import api from '@/services/api';
 import axios from 'axios';
 
 import { withStyles } from '@/tools/withStyles';
@@ -15,17 +15,17 @@ import { Button } from '@/components/Button';
 const MobileActions = ({ user, classes, onQrClick, onIdClick, onViewIdClick, isIdLoading, viewIdUrl, idToUpload }) => (
     <div className={classes.mobileActionsContainer}>
         {/* ID Verification Header */}
-        <h3 className={classes.panelHeader} style={{ marginBottom:10 }}>Identity Verification</h3>
-        
+        <h3 className={classes.panelHeader} style={{ marginBottom: 10 }}>Identity Verification</h3>
+
         {/* QR Code */}
         <div className={classes.qrContainer} onClick={onQrClick} style={{ justifyContent: 'center', marginTop: 10 }}>
             <div className={classes.qrBox}>
                 <QRCodeSVG
-                    value={JSON.stringify({ type: "PARTICIPANT", id: user.uniqueId })}
+                    value={JSON.stringify({ type: "PARTICIPANT", uniqueId: user.uniqueId })}
                     size={80}
                 />
             </div>
-            <div className={classes.qrExpandHint} style={{textAlign: 'center'}}>
+            <div className={classes.qrExpandHint} style={{ textAlign: 'center' }}>
                 Tap to expand QR
             </div>
         </div>
@@ -51,7 +51,7 @@ const MobileActions = ({ user, classes, onQrClick, onIdClick, onViewIdClick, isI
                     </button>
                 )}
             </div>
-             {user.idCardUploaded && !idToUpload && (
+            {user.idCardUploaded && !idToUpload && (
                 <div style={{ color: '#00ff64', fontSize: '0.7rem', marginTop: 2 }}>✓ ID Uploaded</div>
             )}
         </div>
@@ -75,7 +75,7 @@ class IdentityNode extends React.Component {
     componentWillUnmount() {
         cancelAnimationFrame(this.frameId);
         window.removeEventListener('resize', this.handleResize);
-        
+
         const element = this.mountRef.current;
         if (this.renderer) {
             this.renderer.dispose();
@@ -87,9 +87,9 @@ class IdentityNode extends React.Component {
 
     initThree = () => {
         if (!this.mountRef.current) return;
-        
+
         // Clean container
-        while(this.mountRef.current.firstChild) {
+        while (this.mountRef.current.firstChild) {
             this.mountRef.current.removeChild(this.mountRef.current.firstChild);
         }
 
@@ -100,7 +100,7 @@ class IdentityNode extends React.Component {
         this.scene = new THREE.Scene();
         // Add subtle fog for depth
         this.scene.fog = new THREE.FogExp2(0x000000, 0.03);
-        
+
         this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
         this.camera.position.z = 6;
 
@@ -112,12 +112,12 @@ class IdentityNode extends React.Component {
 
         // --- GAMIFICATION LOGIC FROM DATA ---
         const { user } = this.props;
-        
+
         // COLOR: Payment Status (Cyan = Paid/Online, Red = Unpaid/Locked)
         const baseColorHex = user.generalFeePaid ? 0x00f0ff : 0xff0055;
-        
+
         // COMPLEXITY/SPEED: Year (Fallback to 1 if not present)
-        const year = user.year || 1; 
+        const year = user.year || 1;
         this.speedMultiplier = 0.5 + (year * 0.2); // Faster for seniors
 
         // SHAPE: Origin (PSG = Core/Organic, External = Prism/Sharp)
@@ -128,7 +128,7 @@ class IdentityNode extends React.Component {
         this.scene.add(this.coreGroup);
 
         // A. INNER CORE (The Identity)
-        const innerGeometry = isInternal 
+        const innerGeometry = isInternal
             ? new THREE.IcosahedronGeometry(1.2, 1) // Organic D20 look
             : new THREE.OctahedronGeometry(1.2, 0); // Sharp Diamond look
 
@@ -162,7 +162,7 @@ class IdentityNode extends React.Component {
             });
             this.ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
             // Add to scene directly so it rotates independently
-            this.scene.add(this.ringMesh); 
+            this.scene.add(this.ringMesh);
         }
 
         // D. LIGHTING (Glow Effect)
@@ -189,9 +189,9 @@ class IdentityNode extends React.Component {
 
     animate = () => {
         this.frameId = requestAnimationFrame(this.animate);
-        
+
         const time = Date.now() * 0.001;
-        
+
         // Animate Core
         if (this.innerMesh) {
             this.innerMesh.rotation.x = -time * 0.2 * this.speedMultiplier;
@@ -224,11 +224,11 @@ class IdentityNode extends React.Component {
         const { user, isMobile } = this.props;
         // Text overlay styles
         const overlayStyle = {
-            position: 'absolute', 
-            top: 20, 
-            left: 20, 
+            position: 'absolute',
+            top: 20,
+            left: 20,
             zIndex: 10,
-            fontFamily: 'monospace', 
+            fontFamily: 'monospace',
             pointerEvents: 'none',
             textShadow: '0 0 5px rgba(0,0,0,0.8)'
         };
@@ -247,11 +247,11 @@ class IdentityNode extends React.Component {
                         </div>
                     </div>
                 )}
-                
+
                 {/* Three.js Canvas */}
-                <div 
-                    ref={this.mountRef} 
-                    style={{ width: '100%', height: '100%', outline: 'none' }} 
+                <div
+                    ref={this.mountRef}
+                    style={{ width: '100%', height: '100%', outline: 'none' }}
                 />
             </div>
         );
@@ -301,7 +301,7 @@ const styles = theme => {
                 gap: 20
             }
         },
-        
+
         // --- LEFT COLUMN (Identity) ---
         leftColumn: {
             flex: '0 0 320px',
@@ -425,7 +425,7 @@ const styles = theme => {
             paddingRight: 5,
             paddingBottom: 10,
             '&::-webkit-scrollbar': { width: 6 }, // Slightly wider for border
-            '&::-webkit-scrollbar-thumb': { 
+            '&::-webkit-scrollbar-thumb': {
                 backgroundColor: 'transparent',
                 border: '2px solid #FFD700', // Yellow border
                 borderRadius: 0 // Rectangle shape
@@ -478,7 +478,7 @@ const styles = theme => {
         panelOrder3: { '@media (max-width: 960px)': { order: 4 } }, // Account Status
         panelOrder5: { '@media (max-width: 960px)': { order: 5 } }, // Academic
         panelOrder6: { '@media (max-width: 960px)': { order: 6 } }, // Events
-        
+
         panelHeader: {
             fontFamily: theme.typography.primary,
             fontSize: '1.1rem',
@@ -579,7 +579,7 @@ const styles = theme => {
             alignItems: 'center',
             gap: 4
         },
-        
+
         // --- Mobile Actions Bar ---
         mobileActionsContainer: {
             display: 'none',
@@ -698,12 +698,12 @@ const styles = theme => {
             flex: 1,
             width: '100%', // Ensure full width
             minHeight: 0, // Critical for flex child scrolling/sizing
-            overflow: 'hidden', 
+            overflow: 'hidden',
             position: 'relative',
             '& img': {
                 width: '100%',
                 height: '100%',
-                objectFit: 'contain', 
+                objectFit: 'contain',
                 display: 'block',
                 margin: '0 auto',
                 borderRadius: 8
@@ -723,7 +723,7 @@ const styles = theme => {
             justifyContent: 'flex-end',
             gap: 12,
             marginTop: 'auto',
-            '@media (max-width: 960px)': { 
+            '@media (max-width: 960px)': {
                 order: 7,
                 display: 'none' // Hide original buttons on mobile
             }
@@ -761,7 +761,7 @@ const styles = theme => {
             background: 'transparent',
             border: `1px solid ${theme.color.secondary.main}`,
             color: '#fff',
-            '&:hover, &:active': { 
+            '&:hover, &:active': {
                 background: theme.color.secondary.main,
                 color: '#fff !important'
             }
@@ -770,7 +770,7 @@ const styles = theme => {
             background: theme.color.secondary.main,
             color: '#fff',
             boxShadow: `0 0 15px ${theme.color.secondary.main}60`,
-            '&:hover, &:active': { 
+            '&:hover, &:active': {
                 transform: 'scale(1.05)',
                 color: '#fff !important'
             }
@@ -822,7 +822,7 @@ class ProfilePage extends React.Component {
             const { authService } = await import('@/services/authService');
             const response = await authService.getProfile();
             this.setState({ user: response.user, loading: false });
-            
+
             // Fetch registered events after successful auth
             if (response.user) {
                 this.fetchRegisteredEvents();
@@ -841,7 +841,7 @@ class ProfilePage extends React.Component {
         try {
             const response = await api.get('/api/events/user');
             const data = response.data;
-            
+
             let events = [];
             if (Array.isArray(data)) {
                 events = data;
@@ -850,7 +850,7 @@ class ProfilePage extends React.Component {
             } else if (data.data && Array.isArray(data.data)) {
                 events = data.data;
             }
-            
+
             this.setState({ registeredEvents: events });
         } catch (error) {
             console.error("Failed to fetch registered events", error);
@@ -1048,10 +1048,10 @@ class ProfilePage extends React.Component {
                     />
 
                     <div className={classes.dashboardContainer}>
-                        
+
                         {/* LEFT COLUMN: VISUALS + IDENTITY */}
                         <div className={classes.leftColumn}>
-                            
+
                             {/* 1. Main Identity Card (First on Mobile) */}
                             <div className={classes.identityCard}>
                                 <div className={classes.avatarCircle}>
@@ -1083,10 +1083,10 @@ class ProfilePage extends React.Component {
 
                         {/* RIGHT COLUMN: DATA DETAILS */}
                         <div className={classes.rightColumn}>
-                             
-                             {/* NEW: Mobile Quick Actions */}
-                             {isMobile && (
-                                <MobileActions 
+
+                            {/* NEW: Mobile Quick Actions */}
+                            {isMobile && (
+                                <MobileActions
                                     user={user}
                                     classes={classes}
                                     onQrClick={this.toggleQRExpansion}
@@ -1096,21 +1096,21 @@ class ProfilePage extends React.Component {
                                     viewIdUrl={viewIdUrl}
                                     idToUpload={idToUpload}
                                 />
-                             )}
+                            )}
 
-                             {/* 3. Personal Profile & QR (Merged) */}
-                             <div className={`${classes.dataPanel} ${classes.panelOrder2}`}>
-                                <div 
+                            {/* 3. Personal Profile & QR (Merged) */}
+                            <div className={`${classes.dataPanel} ${classes.panelOrder2}`}>
+                                <div
                                     className={isMobile ? `${classes.accordionHeader} ${openAccordion === 'profile' ? classes.accordionHeaderOpen : ''}` : ''}
                                     onClick={() => isMobile && this.toggleAccordion('profile')}
                                 >
                                     <h3 className={classes.panelHeader} style={{ marginBottom: isMobile ? 0 : 10 }}>Profile Details</h3>
                                 </div>
                                 <div className={isMobile ? `${classes.accordionContent} ${openAccordion === 'profile' ? classes.accordionContentOpen : ''}` : ''}>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap-reverse', gap: 20, paddingTop: isMobile ? 0 : 15}}>
-                                        
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap-reverse', gap: 20, paddingTop: isMobile ? 0 : 15 }}>
+
                                         {/* Info Side */}
-                                        <div style={{flex: 1, minWidth: '200px', display: 'flex', flexDirection: 'column', gap: 12}}>
+                                        <div style={{ flex: 1, minWidth: '200px', display: 'flex', flexDirection: 'column', gap: 12 }}>
                                             <div className={classes.dataGrid}>
                                                 <div className={classes.dataField}>
                                                     <label className={classes.fieldLabel}>Phone</label>
@@ -1120,9 +1120,9 @@ class ProfilePage extends React.Component {
                                                     <label className={classes.fieldLabel}>Department</label>
                                                     <div className={classes.fieldValue}>{user.department}</div>
                                                 </div>
-                                                <div className={classes.dataField} style={{gridColumn: '1 / -1'}}>
+                                                <div className={classes.dataField} style={{ gridColumn: '1 / -1' }}>
                                                     <label className={classes.fieldLabel}>College / Institution</label>
-                                                    <div className={classes.fieldValue} style={{whiteSpace: 'normal', lineHeight: 1.4}}>{user.college}</div>
+                                                    <div className={classes.fieldValue} style={{ whiteSpace: 'normal', lineHeight: 1.4 }}>{user.college}</div>
                                                 </div>
                                             </div>
                                         </div> 
@@ -1132,12 +1132,12 @@ class ProfilePage extends React.Component {
                                             <div className={classes.qrContainer} onClick={this.toggleQRExpansion} style={{ marginTop: -15 }}>
                                                 <div className={classes.qrBox}>
                                                     <QRCodeSVG
-                                                        value={JSON.stringify({ type: "PARTICIPANT", id: user.uniqueId })}
+                                                        value={JSON.stringify({ type: "PARTICIPANT", uniqueId: user.uniqueId })}
                                                         size={110}
                                                     />
                                                 </div>
                                                 <div className={classes.qrExpandHint}>
-                                                     Tap to expand
+                                                    Tap to expand
                                                 </div>
                                             </div>
                                         )}
@@ -1147,15 +1147,15 @@ class ProfilePage extends React.Component {
 
                             {/* 4. Account & Payment Status (Moved Down) */}
                             <div className={`${classes.dataPanel} ${classes.panelOrder3}`}>
-                                <div 
+                                <div
                                     className={isMobile ? `${classes.accordionHeader} ${openAccordion === 'account' ? classes.accordionHeaderOpen : ''}` : ''}
                                     onClick={() => isMobile && this.toggleAccordion('account')}
                                 >
                                     <h3 className={classes.panelHeader} style={{ marginBottom: isMobile ? 0 : 15 }}>Account Status</h3>
                                 </div>
                                 <div className={isMobile ? `${classes.accordionContent} ${openAccordion === 'account' ? classes.accordionContentOpen : ''}` : ''}>
-                                    <div className={classes.dataGrid} style={{paddingTop: isMobile ? 0 : 15}}>
-                                        <div className={classes.dataField} style={{gridColumn: '1 / -1'}}>
+                                    <div className={classes.dataGrid} style={{ paddingTop: isMobile ? 0 : 15 }}>
+                                        <div className={classes.dataField} style={{ gridColumn: '1 / -1' }}>
                                             <label className={classes.fieldLabel}>Email</label>
                                             <div className={classes.fieldValue}>{user.email}</div>
                                         </div>
@@ -1175,7 +1175,7 @@ class ProfilePage extends React.Component {
                                         </div>
                                         <div className={classes.dataField}>
                                             <label className={classes.fieldLabel}>Reg. Source</label>
-                                            <div className={classes.fieldValue} style={{textTransform:'capitalize'}}>{user.source}</div>
+                                            <div className={classes.fieldValue} style={{ textTransform: 'capitalize' }}>{user.source}</div>
                                         </div>
                                     </div>
 
@@ -1218,7 +1218,7 @@ class ProfilePage extends React.Component {
 
                             {/* 5. Registered Events Section */}
                             <div className={`${classes.dataPanel} ${classes.panelOrder6}`}>
-                                <div 
+                                <div
                                     className={isMobile ? `${classes.accordionHeader} ${openAccordion === 'events' ? classes.accordionHeaderOpen : ''}` : ''}
                                     onClick={() => isMobile && this.toggleAccordion('events')}
                                 >
@@ -1226,16 +1226,16 @@ class ProfilePage extends React.Component {
                                 </div>
                                 <div className={isMobile ? `${classes.accordionContent} ${openAccordion === 'events' ? classes.accordionContentOpen : ''}` : ''}>
                                     {registeredEvents && registeredEvents.length > 0 ? (
-                                        <div className={classes.dataGrid} style={{paddingTop: isMobile ? 0 : 15, gridTemplateColumns: `repeat(${groupedEventCategories.length}, 1fr)`}}>
+                                        <div className={classes.dataGrid} style={{ paddingTop: isMobile ? 0 : 15, gridTemplateColumns: `repeat(${groupedEventCategories.length}, 1fr)` }}>
                                             {groupedEventCategories.map(category => {
                                                 const categoryColor = categoryColors[category] || categoryColors['Other'];
                                                 return (
-                                                    <div 
-                                                        key={category} 
-                                                        className={classes.dataField} 
-                                                        style={{ 
-                                                            display: 'flex', 
-                                                            flexDirection: 'column', 
+                                                    <div
+                                                        key={category}
+                                                        className={classes.dataField}
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
                                                             gap: 8,
                                                             borderColor: categoryColor, // Apply category color to border
                                                             borderWidth: 1, // Ensure border is visible
@@ -1243,9 +1243,9 @@ class ProfilePage extends React.Component {
                                                     >
                                                         <label className={classes.fieldLabel} style={{ borderBottom: `1px solid ${categoryColor}40`, paddingBottom: 6, marginBottom: 4, color: categoryColor }}>{category}</label>
                                                         {groupedEvents[category].map((event, index) => (
-                                                            <div 
-                                                                key={index} 
-                                                                className={classes.fieldValue} 
+                                                            <div
+                                                                key={index}
+                                                                className={classes.fieldValue}
                                                                 title={event.eventName || event.name}
                                                                 style={{ fontSize: '0.8rem', whiteSpace: 'normal' }}
                                                             >
@@ -1273,10 +1273,10 @@ class ProfilePage extends React.Component {
                         <div className={classes.qrOverlay} onClick={this.toggleQRExpansion}>
                             <div className={classes.qrExpandedContent} onClick={(e) => e.stopPropagation()}>
                                 <QRCodeSVG
-                                    value={JSON.stringify({ type: "PARTICIPANT", id: user.uniqueId })}
+                                    value={JSON.stringify({ type: "PARTICIPANT", uniqueId: user.uniqueId })}
                                     size={300}
                                 />
-                                <div className={classes.qrCloseHint} style={{ color: 'black', fontSize: '16px'}}>
+                                <div className={classes.qrCloseHint} style={{ color: 'black', fontSize: '16px' }}>
                                     Tap outside to close
                                 </div>
                             </div>
@@ -1324,17 +1324,17 @@ class ProfilePage extends React.Component {
                                     )}
                                 </div>
                                 <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 15, flexShrink: 0 }}>
-                                    <button 
-                                        className={classes.actionBtn} 
-                                        onClick={this.cancelIdUpload} 
+                                    <button
+                                        className={classes.actionBtn}
+                                        onClick={this.cancelIdUpload}
                                         disabled={isUploadingId}
                                         style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.3)' }}
                                     >
                                         Cancel
                                     </button>
-                                    <button 
-                                        className={classes.actionBtn} 
-                                        onClick={this.confirmIdUpload} 
+                                    <button
+                                        className={classes.actionBtn}
+                                        onClick={this.confirmIdUpload}
                                         disabled={isUploadingId}
                                         style={{ background: '#00ff64', color: '#000', border: 'none', fontWeight: 800 }}
                                     >
