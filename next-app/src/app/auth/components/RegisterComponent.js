@@ -6,6 +6,12 @@ import { authService } from '@/services/authService';
 import '../auth.css';
 import colleges from '@/app/CollegeList';
 
+// PSG Colleges that require specific email domains
+const PSG_COLLEGES = {
+    'PSG College of Technology (Autonomous), Peelamedu, Coimbatore District 641004': '@psgtech.ac.in',
+    'PSG Institute of Advanced Studies, Peelamedu, Coimbatore District 641004': '@psgias.ac.in',
+    'PSG Institute of Technology and Applied Research, Avinashi Road, Neelambur, Coimbatore 641062': '@psgitech.ac.in'
+};
 
 export default function RegisterComponent() {
     const router = useRouter();
@@ -30,6 +36,9 @@ export default function RegisterComponent() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [showEmailOverlay, setShowEmailOverlay] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     useEffect(() => {
         const storedEmail = localStorage.getItem('registration_email');
@@ -48,16 +57,38 @@ export default function RegisterComponent() {
         }));
     }, [source, router]);
 
+    // Check if the selected college is a PSG college and validate email domain
+    const validatePSGEmail = () => {
+        const selectedCollege = formData.college;
+        const email = formData.email.toLowerCase();
+
+        if (PSG_COLLEGES[selectedCollege]) {
+            const requiredDomain = PSG_COLLEGES[selectedCollege];
+            return email.endsWith(requiredDomain);
+        }
+        return true; // Not a PSG college, no domain restriction
+    };
+
     const handleChange = (e) => {
         setFormData(prev => ({
             ...prev,
             [e.target.name]: e.target.value
         }));
+        // Reset overlay when college changes
+        if (e.target.name === 'college') {
+            setShowEmailOverlay(false);
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        // Check PSG college email validation
+        if (!validatePSGEmail()) {
+            setShowEmailOverlay(true);
+            return;
+        }
 
         if (formData.source === 'email' && formData.password !== formData.confirmPassword) {
             setError('Passwords do not match');
@@ -134,30 +165,70 @@ export default function RegisterComponent() {
                             <div className="form-row two-columns">
                                 <div className="auth-field">
                                     <label htmlFor="password">Password *</label>
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        placeholder="Min. 6 characters"
-                                        required
-                                        minLength={6}
-                                    />
+                                    <div className="password-input-wrapper">
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            id="password"
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            placeholder="Min. 6 characters"
+                                            required
+                                            minLength={6}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="password-toggle-btn"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            tabIndex={-1}
+                                        >
+                                            {showPassword ? (
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                                                    <line x1="1" y1="1" x2="23" y2="23" />
+                                                </svg>
+                                            ) : (
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                    <circle cx="12" cy="12" r="3" />
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="auth-field">
                                     <label htmlFor="confirmPassword">Confirm Password *</label>
-                                    <input
-                                        type="password"
-                                        id="confirmPassword"
-                                        name="confirmPassword"
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange}
-                                        placeholder="Re-enter password"
-                                        required
-                                        minLength={6}
-                                    />
+                                    <div className="password-input-wrapper">
+                                        <input
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            id="confirmPassword"
+                                            name="confirmPassword"
+                                            value={formData.confirmPassword}
+                                            onChange={handleChange}
+                                            placeholder="Re-enter password"
+                                            required
+                                            minLength={6}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="password-toggle-btn"
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            tabIndex={-1}
+                                        >
+                                            {showConfirmPassword ? (
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                                                    <line x1="1" y1="1" x2="23" y2="23" />
+                                                </svg>
+                                            ) : (
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                    <circle cx="12" cy="12" r="3" />
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -320,6 +391,43 @@ export default function RegisterComponent() {
                     </p>
                 </div>
             </div>
+
+            {/* PSG College Email Validation Overlay */}
+            {showEmailOverlay && (
+                <div className="psg-email-overlay">
+                    <div className="psg-email-overlay-content">
+                        <div className="psg-email-overlay-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <h2>College Email Required</h2>
+                        <p>
+                            To register as a student of <strong>{formData.college}</strong>,
+                            please use your official college email address ending with
+                            <span className="psg-email-domain">{PSG_COLLEGES[formData.college]}</span>
+                        </p>
+                        <button
+                            className="auth-btn psg-overlay-btn"
+                            onClick={() => {
+                                localStorage.removeItem('registration_email');
+                                localStorage.removeItem('registration_googleId');
+                                router.push('/auth?type=register');
+                            }}
+                        >
+                            Register with College Email
+                        </button>
+                        <button
+                            className="auth-link psg-overlay-close"
+                            onClick={() => setShowEmailOverlay(false)}
+                        >
+                            Go Back
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

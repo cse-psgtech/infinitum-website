@@ -362,6 +362,77 @@ main>div::-webkit-scrollbar {
     box-shadow: 0 0 12px rgba(199, 32, 113, 0.25);
 }
 
+/* Password Toggle Button - for login/reset password pages */
+.input-group .password-toggle-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+    z-index: 10;
+}
+
+.input-group .password-toggle-btn:hover {
+    color: var(--accent-color);
+}
+
+.input-group .password-toggle-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Adjust input padding when toggle button exists */
+.input-group:has(.password-toggle-btn) input {
+    padding-right: 40px;
+}
+
+/* Password Input Wrapper - for register page */
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 40px !important;
+}
+
+.password-input-wrapper .password-toggle-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+    z-index: 10;
+}
+
+.password-input-wrapper .password-toggle-btn:hover {
+    color: var(--accent-color);
+}
+
+.password-input-wrapper .password-toggle-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
 /* Floating Particles */
 .particle {
     position: absolute;
@@ -926,5 +997,143 @@ main>div::-webkit-scrollbar {
     .accent-bar-bottom,
     .particle {
         display: none;
+    }
+}
+
+/* ===============================================
+   PSG College Email Overlay
+   =============================================== */
+.psg-email-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: overlay-fade-in 0.3s ease-out;
+}
+
+@keyframes overlay-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.psg-email-overlay-content {
+    background: var(--bg-grey);
+    border: 2px solid var(--frame-color);
+    padding: 40px;
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+    animation: overlay-slide-up 0.3s ease-out;
+}
+
+@keyframes overlay-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.psg-email-overlay-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 24px;
+    border: 2px solid var(--yellow-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.psg-email-overlay-icon svg {
+    width: 36px;
+    height: 36px;
+    color: var(--yellow-accent);
+}
+
+.psg-email-overlay-content h2 {
+    color: #ffffff;
+    font-family: var(--font-orbitron), 'Orbitron', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    text-shadow: 0 0 12px var(--frame-glow);
+}
+
+.psg-email-overlay-content p {
+    color: var(--text-dim);
+    font-family: var(--font-electrolize), 'Electrolize', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+    letter-spacing: 0.3px;
+}
+
+.psg-email-overlay-content p strong {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.psg-email-domain {
+    display: inline-block;
+    background: rgba(199, 32, 113, 0.2);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 4px 10px;
+    margin-left: 6px;
+    font-family: var(--font-orbitron), 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.psg-overlay-btn {
+    margin-bottom: 16px;
+}
+
+.psg-overlay-close {
+    display: block;
+    margin: 0 auto;
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 8px 16px;
+}
+
+.psg-overlay-close:hover {
+    color: var(--accent-color);
+}
+
+/* Responsive overlay */
+@media (max-width: 520px) {
+    .psg-email-overlay-content {
+        padding: 30px 20px;
+    }
+
+    .psg-email-overlay-content h2 {
+        font-size: 16px;
+    }
+
+    .psg-email-overlay-content p {
+        font-size: 13px;
+    }
+
+    .psg-email-domain {
+        display: block;
+        margin: 8px 0 0 0;
     }
 }
