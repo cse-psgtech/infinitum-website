@@ -17,12 +17,12 @@ const DAYS = [
 
 const RAW_EVENTS = [
     // Day 1
-    { title: 'Inauguration', start: '09:10', end: '09:45', category: 'general', day: 'day1', venue: 'D Block' },
-    { title: 'Speaker Talk', start: '10:00', end: '11:00', category: 'talk', day: 'day1', venue: 'Seminar Hall A' },
+    { title: 'Inauguration', start: '09:00', end: '10:00', category: 'general', day: 'day1', venue: 'D Block' },
+
     { title: 'Thooral – Hackathon', start: '10:00', end: '16:30', category: 'flagship', day: 'day1', venue: 'CC Lab' },
     { title: 'Force Coders', start: '10:00', end: '16:00', category: 'competition', day: 'day1', venue: 'GRD and Programming Labs' },
     { title: 'Quest X', start: '10:00', end: '15:00', category: 'competition', day: 'day1', venue: 'Q Block Classrooms' },
-    { title: 'Workshop 1', start: '10:30', end: '16:00', category: 'workshop', day: 'day1', venue: 'SCPS Lab' },
+    { title: 'Workshop 1', start: '10:00', end: '16:00', category: 'workshop', day: 'day1', venue: 'SCPS Lab' },
     { title: 'Open Quiz', start: '13:45', end: '16:00', category: 'quiz', day: 'day1', venue: 'D Block' },
     { title: 'Award Ceremony I', start: '16:30', end: '17:15', category: 'awards', day: 'day1', venue: 'F203' },
 

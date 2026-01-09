@@ -57,7 +57,7 @@ export const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     gap: 10,
-    marginBottom: 3,
+    marginBottom: 0,
     flexWrap: 'wrap',
     marginTop: 5,
     width: '100%' // Ensure tabs container is full width
@@ -97,7 +97,7 @@ export const styles = theme => ({
     WebkitOverflowScrolling: 'touch',
     display: 'block', // Ensure block display
     position: 'relative', // Layout context
-    paddingTop: 27 // Add padding for first row tooltips
+    paddingTop: 80 // Add padding for first row tooltips
   },
   timeline: {
     minWidth: '100%',
