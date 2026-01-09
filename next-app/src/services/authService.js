@@ -61,4 +61,28 @@ export const authService = {
         const response = await api.post('/api/auth/user/login-google', data);
         return response.data;
     },
+
+    // Pre-registration - Send verification code to email
+    sendPreRegistrationCode: async (email) => {
+        const response = await api.post('/api/events/preregister', { email });
+        return response.data;
+    },
+
+    // Pre-registration - Verify the code and complete pre-registration
+    verifyPreRegistration: async (email, verificationCode) => {
+        const response = await api.post('/api/events/preregister/verify', { email, verificationCode });
+        return response.data;
+    },
+
+    // Pre-registration - Check status
+    checkPreRegistration: async (email) => {
+        const response = await api.get(`/api/events/preregister/check?email=${encodeURIComponent(email)}`);
+        return response.data;
+    },
+
+    // Pre-registration - Resend verification code
+    resendPreRegistrationCode: async (email) => {
+        const response = await api.post('/api/events/preregister/resend', { email });
+        return response.data;
+    },
 };

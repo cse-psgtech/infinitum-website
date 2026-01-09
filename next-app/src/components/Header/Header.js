@@ -417,7 +417,7 @@ class Component extends React.Component {
           </Secuence>
 
           <Secuence animation={{ show, independent: true }}>
-            <Menu className={classes.menu} />
+            <Menu className={classes.menu} showPreRegButton={false} />
           </Secuence>
         </div>
       </header>

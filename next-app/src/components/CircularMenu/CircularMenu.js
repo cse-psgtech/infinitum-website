@@ -1,10 +1,11 @@
 ﻿"use client";
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Howl } from 'howler';
 import styles from './CircularMenu.module.css';
 import { useSound } from '@/context/SoundContext';
+import { isPreRegistrationEnabled } from '@/settings/featureFlags';
 
 const MENU_ITEMS = [
     { label: 'Home', icon: 'ri-home-line', href: '/', match: ['/'] },
@@ -56,6 +57,15 @@ export default function CircularMenu() {
     const isDraggingRef = useRef(false);
     const { isMuted } = useSound();
 
+    // Filter menu items based on pre-registration mode
+    const menuItems = useMemo(() => {
+        if (isPreRegistrationEnabled) {
+            // Hide Profile when pre-registration is enabled
+            return MENU_ITEMS.filter(item => item.label !== 'Profile');
+        }
+        return MENU_ITEMS;
+    }, []);
+
     // Helper function to play Howl sounds with mute check
     const playHowl = useCallback((sound) => {
         if (isMuted || !sound) return;
@@ -96,7 +106,7 @@ export default function CircularMenu() {
         }
 
         // Find matching menu item
-        const index = MENU_ITEMS.findIndex(item => {
+        const index = menuItems.findIndex(item => {
             if (!item.match) return item.href === fullPath;
             return item.match.some(matchPath => {
                 // Exact match
@@ -120,7 +130,7 @@ export default function CircularMenu() {
             setSelectedIndex(index);
 
             // Rotate wheel to show active page at top (only on initial mount)
-            const segmentAngle = 360 / MENU_ITEMS.length;
+            const segmentAngle = 360 / menuItems.length;
             const targetRotation = -index * segmentAngle;
             setRotationAngle(targetRotation);
         } else {
@@ -158,11 +168,11 @@ export default function CircularMenu() {
             setMouseAngle(angle);
 
             // Determine which segment the mouse is in
-            const segmentAngle = 360 / MENU_ITEMS.length;
+            const segmentAngle = 360 / menuItems.length;
             // Account for current rotation
             const adjustedAngle = (angle - rotationAngle + segmentAngle / 2 + 360) % 360;
             const segmentIndex = Math.floor(adjustedAngle / segmentAngle);
-            setHoveredIndex(segmentIndex % MENU_ITEMS.length);
+            setHoveredIndex(segmentIndex % menuItems.length);
         } else {
             // Clear hover when mouse is outside the ring area
             setHoveredIndex(null);
@@ -197,21 +207,21 @@ export default function CircularMenu() {
 
             // Arrow keys and Enter only work when menu is open
             if (isOpen) {
-                const segmentAngle = 360 / MENU_ITEMS.length;
+                const segmentAngle = 360 / menuItems.length;
 
                 if (e.key === 'ArrowLeft') {
                     e.preventDefault();
                     // Rotate counterclockwise (previous item) - still forward motion
-                    const newIndex = (selectedIndex - 1 + MENU_ITEMS.length) % MENU_ITEMS.length;
-                    const stepsForward = (newIndex - selectedIndex + MENU_ITEMS.length) % MENU_ITEMS.length;
+                    const newIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
+                    const stepsForward = (newIndex - selectedIndex + menuItems.length) % menuItems.length;
                     setSelectedIndex(newIndex);
                     setRotationAngle(rotationAngle - stepsForward * segmentAngle);
                     playHowl(hoverSound);
                 } else if (e.key === 'ArrowRight') {
                     e.preventDefault();
                     // Rotate clockwise (next item) - forward motion
-                    const newIndex = (selectedIndex + 1) % MENU_ITEMS.length;
-                    const stepsForward = (newIndex - selectedIndex + MENU_ITEMS.length) % MENU_ITEMS.length;
+                    const newIndex = (selectedIndex + 1) % menuItems.length;
+                    const stepsForward = (newIndex - selectedIndex + menuItems.length) % menuItems.length;
                     setSelectedIndex(newIndex);
                     setRotationAngle(rotationAngle - stepsForward * segmentAngle);
                     playHowl(hoverSound);
@@ -243,7 +253,7 @@ export default function CircularMenu() {
                 localStorage.setItem('menu_desktop_hint_seen', 'true');
             }
             // Rotate wheel to show active page at top center when opening
-            const segmentAngle = 360 / MENU_ITEMS.length;
+            const segmentAngle = 360 / menuItems.length;
             const targetRotation = -activeIndex * segmentAngle;
             setRotationAngle(targetRotation);
         }
@@ -264,19 +274,19 @@ export default function CircularMenu() {
             return;
         }
 
-        const targetHref = MENU_ITEMS[index].href;
+        const targetHref = menuItems[index].href;
 
         // Calculate rotation using modulo to always go forward
-        const segmentAngle = 360 / MENU_ITEMS.length;
+        const segmentAngle = 360 / menuItems.length;
 
         // Normalize current rotation to 0-359 range
         const normalizedCurrent = ((rotationAngle % 360) + 360) % 360;
 
         // Calculate current index based on normalized rotation
-        const currentNormalizedIndex = Math.round(-normalizedCurrent / segmentAngle) % MENU_ITEMS.length;
+        const currentNormalizedIndex = Math.round(-normalizedCurrent / segmentAngle) % menuItems.length;
 
         // Calculate steps to move forward (always clockwise)
-        const stepsForward = (index - currentNormalizedIndex + MENU_ITEMS.length) % MENU_ITEMS.length;
+        const stepsForward = (index - currentNormalizedIndex + menuItems.length) % menuItems.length;
 
         // If no movement needed, don't rotate
         if (stepsForward === 0) {
@@ -362,9 +372,9 @@ export default function CircularMenu() {
         if (!isMobile || !isOpen) return;
 
         // Snap to nearest segment
-        const segmentAngle = 360 / MENU_ITEMS.length;
-        const nearestIndex = Math.round(-rotationAngle / segmentAngle) % MENU_ITEMS.length;
-        const snappedIndex = (nearestIndex + MENU_ITEMS.length) % MENU_ITEMS.length;
+        const segmentAngle = 360 / menuItems.length;
+        const nearestIndex = Math.round(-rotationAngle / segmentAngle) % menuItems.length;
+        const snappedIndex = (nearestIndex + menuItems.length) % menuItems.length;
         const snappedRotation = -snappedIndex * segmentAngle;
 
         // Calculate shortest path for snap
@@ -395,7 +405,7 @@ export default function CircularMenu() {
 
     // Calculate position for each segment's icon (no rotation offset - handled by CSS)
     const getIconPosition = (index) => {
-        const total = MENU_ITEMS.length;
+        const total = menuItems.length;
         const segmentAngle = 360 / total;
         const angle = index * segmentAngle; // 0 = top
         // Desktop: (65+195)/2=130, Mobile: (55+175)/2=115
@@ -410,7 +420,7 @@ export default function CircularMenu() {
 
     // Generate SVG path for a pie segment (no rotation offset - handled by CSS)
     const getSegmentPath = (index) => {
-        const total = MENU_ITEMS.length;
+        const total = menuItems.length;
         const segmentAngle = 360 / total;
         const startAngle = index * segmentAngle - segmentAngle / 2 - 90;
         const endAngle = startAngle + segmentAngle;
@@ -480,7 +490,7 @@ export default function CircularMenu() {
                             className={styles.pieSvg}
                         >
                             {/* Segment backgrounds */}
-                            {MENU_ITEMS.map((item, index) => {
+                            {menuItems.map((item, index) => {
                                 const isHovered = hoveredIndex === index && !isDragging;
                                 const isActive = activeIndex === index;
                                 const isSelected = selectedIndex === index && !isActive;
@@ -505,7 +515,7 @@ export default function CircularMenu() {
                         </svg>
 
                         {/* Icons positioned on segments */}
-                        {MENU_ITEMS.map((item, index) => {
+                        {menuItems.map((item, index) => {
                             const pos = getIconPosition(index);
                             const isHovered = hoveredIndex === index && !isDragging;
                             const isActive = activeIndex === index;

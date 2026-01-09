@@ -49,6 +49,8 @@ import { PopupProvider } from "@/context/PopupContext";
 import CircularMenu from "@/components/CircularMenu/CircularMenu";
 import SoundMuteButton from "@/components/SoundMuteButton/SoundMuteButton";
 import CircularMenuWrapper from "@/components/CircularMenu/CircularMenuWrapper";
+import { PreRegistrationProvider } from "@/context/PreRegistrationContext";
+import PreRegistrationModal from "@/components/PreRegistrationModal";
 
 export default function RootLayout({ children }) {
   return (
@@ -65,13 +67,16 @@ export default function RootLayout({ children }) {
           <SoundProvider>
             <PopupProvider>
               <AuthProvider>
-                <ShutterProvider>
-                  <ClientTemplate>
-                    {children}
-                  </ClientTemplate>
-                  <CircularMenuWrapper />
-                  <SoundMuteButton />
-                </ShutterProvider>
+                <PreRegistrationProvider>
+                  <ShutterProvider>
+                    <ClientTemplate>
+                      {children}
+                    </ClientTemplate>
+                    <CircularMenuWrapper />
+                    <SoundMuteButton />
+                    <PreRegistrationModal />
+                  </ShutterProvider>
+                </PreRegistrationProvider>
               </AuthProvider>
             </PopupProvider>
           </SoundProvider>
