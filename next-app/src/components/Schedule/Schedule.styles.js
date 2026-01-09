@@ -22,7 +22,7 @@ export const styles = theme => ({
     alignItems: 'center', // Force center alignment
     justifyContent: 'center',
     textAlign: 'center',
-    marginBottom: 0,
+    marginBottom: 5,
     marginTop: 0,
     padding: '0 10px' // Add padding to prevent text touching edges
   },
@@ -49,15 +49,17 @@ export const styles = theme => ({
     letterSpacing: '0.1em',
     fontFamily: theme.typography.primary,
     textTransform: 'uppercase',
-    textAlign: 'center'
+    textAlign: 'center',
+    marginTop: 0,
+    marginBottom: 0
   },
   dayTabs: {
     display: 'flex',
     justifyContent: 'center',
     gap: 10,
-    marginBottom: 8,
+    marginBottom: 3,
     flexWrap: 'wrap',
-    marginTop: 0,
+    marginTop: 5,
     width: '100%' // Ensure tabs container is full width
   },
   dayTab: {
@@ -95,7 +97,7 @@ export const styles = theme => ({
     WebkitOverflowScrolling: 'touch',
     display: 'block', // Ensure block display
     position: 'relative', // Layout context
-    paddingTop: 80 // Add padding for first row tooltips
+    paddingTop: 27 // Add padding for first row tooltips
   },
   timeline: {
     minWidth: '100%',
@@ -258,6 +260,17 @@ export const styles = theme => ({
     textOverflow: 'ellipsis',
     textShadow: '0 1px 2px rgba(255,255,255,0.3)'
   },
+  eventVenue: {
+    fontSize: '0.6rem',
+    color: 'rgba(0,0,0,0.7)',
+    whiteSpace: 'nowrap',
+    fontWeight: 500,
+    marginTop: 2,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontStyle: 'italic',
+    opacity: 0.9
+  },
 
   // Custom Tooltip
   eventTooltip: {
@@ -320,6 +333,14 @@ export const styles = theme => ({
     color: theme.color.secondary.main,
     fontFamily: theme.typography.secondary,
     fontWeight: 600
+  },
+  tooltipVenue: {
+    fontSize: '0.7rem',
+    color: rgba(theme.color.secondary.light, 0.8),
+    fontFamily: theme.typography.secondary,
+    fontWeight: 500,
+    marginTop: 4,
+    fontStyle: 'italic'
   },
 
   // Neon Color Variants with Gradients and Glows
@@ -512,5 +533,14 @@ export const styles = theme => ({
     '& svg': {
       fontSize: '1.1em'
     }
+  },
+  mobileEventVenue: {
+    fontSize: '0.75rem',
+    color: rgba(theme.color.text.main, 0.7),
+    fontFamily: theme.typography.secondary,
+    fontWeight: 500,
+    marginTop: 4,
+    fontStyle: 'italic',
+    opacity: 0.9
   }
 });
