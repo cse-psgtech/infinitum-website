@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { eventService } from '@/services/eventservice';
 import { useAuth } from '@/context/AuthContext';
 import { useSound } from '@/context/SoundContext';
+import { usePreRegistration } from '@/context/PreRegistrationContext';
+import { isPreRegistrationEnabled, preRegistrationConfig } from '@/settings/featureFlags';
 import { eventsData, workshopsData, papersData } from '@/data/eventsData';
 import { CometCard } from '@/components/ui/comet-card';
 import styles from './EventShowcase.module.css';
@@ -13,6 +15,7 @@ export default function EventShowcase({ sounds, initialEventId }) {
     const searchParams = useSearchParams();
     const { isAuthenticated, user } = useAuth();
     const { isMuted } = useSound();
+    const { openModal: openPreRegModal } = usePreRegistration();
     const [category, setCategory] = useState(searchParams.get('category') || 'events');
 
     // Determine effective event ID from props or URL
@@ -335,6 +338,12 @@ export default function EventShowcase({ sounds, initialEventId }) {
     const handleRegisterClick = () => {
         if (sounds?.click) sounds.click.play();
 
+        // If pre-registration mode is enabled, open the pre-registration modal
+        if (isPreRegistrationEnabled) {
+            openPreRegModal();
+            return;
+        }
+
         const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
 
         if (!isAuthenticated && !token) {
@@ -498,25 +507,27 @@ export default function EventShowcase({ sounds, initialEventId }) {
             <div className={styles.controlsContainer}>
                 {!isMobile && renderDropdown()}
 
-                {/* Register Button */}
-                <button
-                    className={styles.registerButton}
-                    onClick={!currentEvent.isRegistered ? handleRegisterClick : undefined}
-                    style={{
-                        background: currentEvent.isRegistered ? 'transparent' : undefined,
-                        cursor: currentEvent.isRegistered ? 'default' : 'pointer',
-                        borderColor: currentEvent.isRegistered ? '#00E676' : undefined,
-                        color: currentEvent.isRegistered ? '#00E676' : undefined,
-                        boxShadow: currentEvent.isRegistered ? 'none' : undefined,
-                    }}
-                >
-                    <span>
-                        {currentEvent.isRegistered
-                            ? 'Registered'
-                            : (category === 'papers' ? 'Submit' : 'Register Now')
-                        }
-                    </span>
-                </button>
+                {/* Register Button - Hidden when pre-registration is enabled */}
+                {!isPreRegistrationEnabled && (
+                    <button
+                        className={styles.registerButton}
+                        onClick={!currentEvent.isRegistered ? handleRegisterClick : undefined}
+                        style={{
+                            background: currentEvent.isRegistered ? 'transparent' : undefined,
+                            cursor: currentEvent.isRegistered ? 'default' : 'pointer',
+                            borderColor: currentEvent.isRegistered ? '#00E676' : undefined,
+                            color: currentEvent.isRegistered ? '#00E676' : undefined,
+                            boxShadow: currentEvent.isRegistered ? 'none' : undefined,
+                        }}
+                    >
+                        <span>
+                            {currentEvent.isRegistered
+                                ? 'Registered'
+                                : (category === 'papers' ? 'Submit' : 'Register Now')
+                            }
+                        </span>
+                    </button>
+                )}
             </div>
 
             {/* Event Name with Bracket Frame - Uses corner elements for all 4 corners */}
@@ -560,7 +571,7 @@ export default function EventShowcase({ sounds, initialEventId }) {
                     <div className={styles.statItem}>
                         <div className={styles.statLabel}>DATE AND TIME</div>
                         <div className={styles.statValue}>
-                            {(currentEvent.dateAndTime || currentEvent.timing) && 
+                            {(currentEvent.dateAndTime || currentEvent.timing) &&
                                 (currentEvent.dateAndTime || currentEvent.timing).split(', ').map((part, idx) => (
                                     <div key={idx}>{part}</div>
                                 ))
@@ -765,26 +776,28 @@ export default function EventShowcase({ sounds, initialEventId }) {
                                     </div>
                                 )}
 
-                                <button
-                                    className={styles.registerBtn}
-                                    onClick={!currentEvent.isRegistered ? handleRegisterClick : undefined}
-                                    style={{
-                                        opacity: currentEvent.isRegistered ? 1 : 1,
-                                        cursor: currentEvent.isRegistered ? 'default' : 'pointer',
-                                        background: currentEvent.isRegistered ? 'transparent' : undefined,
-                                        borderColor: currentEvent.isRegistered ? '#00E676' : undefined,
-                                        color: currentEvent.isRegistered ? '#00E676' : undefined,
-                                        boxShadow: currentEvent.isRegistered ? 'none' : undefined,
-                                    }}
-                                >
-                                    <span>
-                                        {currentEvent.isRegistered
-                                            ? 'Registered'
-                                            : (category === 'papers' ? 'Submit' : 'Register Now')
-                                        }
-                                    </span>
-                                    {/* <i className="ri-arrow-right-up-line"></i> */}
-                                </button>
+                                {/* Register Button in modal - Hidden when pre-registration is enabled */}
+                                {!isPreRegistrationEnabled && (
+                                    <button
+                                        className={styles.registerBtn}
+                                        onClick={!currentEvent.isRegistered ? handleRegisterClick : undefined}
+                                        style={{
+                                            opacity: currentEvent.isRegistered ? 1 : 1,
+                                            cursor: currentEvent.isRegistered ? 'default' : 'pointer',
+                                            background: currentEvent.isRegistered ? 'transparent' : undefined,
+                                            borderColor: currentEvent.isRegistered ? '#00E676' : undefined,
+                                            color: currentEvent.isRegistered ? '#00E676' : undefined,
+                                            boxShadow: currentEvent.isRegistered ? 'none' : undefined,
+                                        }}
+                                    >
+                                        <span>
+                                            {currentEvent.isRegistered
+                                                ? 'Registered'
+                                                : (category === 'papers' ? 'Submit' : 'Register Now')
+                                            }
+                                        </span>
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -1,0 +1,94 @@
+/* Collaboration Component Styles */
+
+.collaboration {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px;
+    background: linear-gradient(180deg, transparent 0%, rgba(199, 32, 113, 0.05) 50%, transparent 100%);
+}
+
+.title {
+    font-family: var(--font-orbitron), sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #eeeeee;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 0 0 30px rgba(199, 32, 113, 0.5);
+}
+
+.logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.logoLink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(199, 32, 113, 0.2);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    gap: 10px;
+}
+
+.logoLink:hover {
+    background: rgba(199, 32, 113, 0.1);
+    border-color: rgba(199, 32, 113, 0.5);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(199, 32, 113, 0.2);
+}
+
+.logo {
+    filter: grayscale(0.3);
+    opacity: 0.85;
+    transition: all 0.3s ease;
+}
+
+.logoLink:hover .logo {
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+.subtitle {
+    font-family: var(--font-orbitron), 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 0.3s ease;
+}
+
+.logoLink:hover .subtitle {
+    color: #c72071;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .collaboration {
+        padding: 40px 20px;
+    }
+
+    .title {
+        font-size: 1rem;
+        letter-spacing: 0.15em;
+    }
+
+    .logos {
+        gap: 30px;
+    }
+
+    .logoLink {
+        padding: 12px;
+    }
+}

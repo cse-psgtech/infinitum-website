@@ -6,6 +6,8 @@ import styles from './FlagshipEvent.module.css';
 import { eventService } from '@/services/eventservice';
 import { useSound } from '@/context/SoundContext';
 import { useAuth } from '@/context/AuthContext';
+import { usePreRegistration } from '@/context/PreRegistrationContext';
+import { isPreRegistrationEnabled, preRegistrationConfig } from '@/settings/featureFlags';
 
 // Static event data
 const EVENT_DATA = {
@@ -32,6 +34,7 @@ export default function FlagshipEvent() {
     const cardRef = useRef(null);
     const { isMuted } = useSound();
     const { isAuthenticated } = useAuth();
+    const { openModal: openPreRegModal } = usePreRegistration();
 
     // Audio refs
     const clickSoundRef = useRef(null);
@@ -214,6 +217,12 @@ export default function FlagshipEvent() {
 
     const handleRegisterClick = () => {
         playSound(clickSoundRef);
+
+        // If pre-registration mode is enabled, open the pre-registration modal
+        if (isPreRegistrationEnabled) {
+            openPreRegModal();
+            return;
+        }
 
         const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
 
@@ -471,20 +480,22 @@ export default function FlagshipEvent() {
                                     <p className={styles.clubName}>Organized by {thooral.clubName}</p>
                                 )}
 
-                                {/* Register Button */}
-                                <button
-                                    className={styles.registerBtn}
-                                    onClick={isRegistered ? undefined : handleRegisterClick}
-                                    style={{
-                                        cursor: isRegistered ? 'default' : 'pointer',
-                                        background: isRegistered ? 'transparent' : undefined,
-                                        borderColor: isRegistered ? '#00E676' : undefined,
-                                        color: isRegistered ? '#00E676' : undefined,
-                                        boxShadow: isRegistered ? 'none' : undefined,
-                                    }}
-                                >
-                                    {isRegistered ? 'Registered' : 'Register Now'}
-                                </button>
+                                {/* Register Button - Hidden when pre-registration is enabled */}
+                                {!isPreRegistrationEnabled && (
+                                    <button
+                                        className={styles.registerBtn}
+                                        onClick={isRegistered ? undefined : handleRegisterClick}
+                                        style={{
+                                            cursor: isRegistered ? 'default' : 'pointer',
+                                            background: isRegistered ? 'transparent' : undefined,
+                                            borderColor: isRegistered ? '#00E676' : undefined,
+                                            color: isRegistered ? '#00E676' : undefined,
+                                            boxShadow: isRegistered ? 'none' : undefined,
+                                        }}
+                                    >
+                                        {isRegistered ? 'Registered' : 'Register Now'}
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

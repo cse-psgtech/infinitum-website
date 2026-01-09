@@ -6,6 +6,8 @@ import anime from 'animejs';
 
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
+import { usePreRegistration } from '../../context/PreRegistrationContext';
+import { isPreRegistrationEnabled, preRegistrationConfig } from '../../settings/featureFlags';
 import { Link } from '../Link';
 import { Text } from '../Text';
 import { Secuence } from '../Secuence';
@@ -28,11 +30,14 @@ class Component extends React.PureComponent {
     onLinkEnd: PropTypes.func,
     user: PropTypes.object,
     logout: PropTypes.func,
-    isAuthPage: PropTypes.bool
+    isAuthPage: PropTypes.bool,
+    openPreRegModal: PropTypes.func,
+    showPreRegButton: PropTypes.bool  // When false and pre-reg enabled, hide buttons entirely
   };
 
   static defaultProps = {
-    scheme: SCHEME_NORMAL
+    scheme: SCHEME_NORMAL,
+    showPreRegButton: true  // Default to showing pre-reg button (for home page Menu)
   };
 
   constructor() {
@@ -151,6 +156,8 @@ class Component extends React.PureComponent {
       user,
       logout,
       isAuthPage,
+      openPreRegModal,
+      showPreRegButton,
       ...etc
     } = this.props;
     const { showSecuence } = this.state;
@@ -192,24 +199,42 @@ class Component extends React.PureComponent {
               </button>
             </>
           ) : showAuthButtons ? (
-            <>
-              <Link href='/auth?type=register' {...linkProps}>
-                <Text
-                  animation={{ animate: animateText }}
-                  audio={{ silent: !animateText }}
+            isPreRegistrationEnabled ? (
+              // If showPreRegButton is true, show Pre-Register button; otherwise hide entirely
+              showPreRegButton ? (
+                <button
+                  className={cx(classes.item, classes.link)}
+                  onMouseEnter={() => sounds.hover.play()}
+                  onClick={openPreRegModal}
                 >
-                  RegisteR
-                </Text>
-              </Link>
-              <Link href='/auth?type=login' {...linkProps}>
-                <Text
-                  animation={{ animate: animateText }}
-                  audio={{ silent: !animateText }}
-                >
-                  Login
-                </Text>
-              </Link>
-            </>
+                  <Text
+                    animation={{ animate: animateText }}
+                    audio={{ silent: !animateText }}
+                  >
+                    {preRegistrationConfig.buttonText}
+                  </Text>
+                </button>
+              ) : null
+            ) : (
+              <>
+                <Link href='/auth?type=register' {...linkProps}>
+                  <Text
+                    animation={{ animate: animateText }}
+                    audio={{ silent: !animateText }}
+                  >
+                    RegisteR
+                  </Text>
+                </Link>
+                <Link href='/auth?type=login' {...linkProps}>
+                  <Text
+                    animation={{ animate: animateText }}
+                    audio={{ silent: !animateText }}
+                  >
+                    Login
+                  </Text>
+                </Link>
+              </>
+            )
           ) : null}
         </nav>
       </Secuence>
@@ -220,9 +245,10 @@ class Component extends React.PureComponent {
 // Wrapper component to use hooks with class component
 const MenuWithAuth = React.forwardRef((props, ref) => {
   const { user, logout } = useAuth();
+  const { openModal } = usePreRegistration();
   const pathname = usePathname();
   const isAuthPage = pathname?.startsWith('/auth');
-  return <Component {...props} user={user} logout={logout} isAuthPage={isAuthPage} ref={ref} />;
+  return <Component {...props} user={user} logout={logout} isAuthPage={isAuthPage} openPreRegModal={openModal} ref={ref} />;
 });
 
 MenuWithAuth.displayName = 'Menu';

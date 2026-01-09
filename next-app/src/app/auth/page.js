@@ -1,10 +1,12 @@
 'use client';
 
 import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Main } from '@/components/Main';
 import { Secuence } from '@/components/Secuence';
 import { useShutter } from '@/context/ShutterContext';
+import { usePreRegistration } from '@/context/PreRegistrationContext';
+import { isPreRegistrationEnabled } from '@/settings/featureFlags';
 import LoginComponent from './components/LoginComponent';
 import RegisterModeComponent from './components/RegisterModeComponent';
 import SendEmailComponent from './components/SendEmailComponent';
@@ -17,13 +19,26 @@ import './auth.css';
 
 function AuthContent() {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const { triggerShutter, shutterState } = useShutter();
+    const { openModal: openPreRegModal } = usePreRegistration();
     const type = searchParams.get('type') || 'login';
 
     const [currentType, setCurrentType] = useState(type);
     const [isFlickering, setIsFlickering] = useState(false);
     const isFirstRender = useRef(true);
     const previousType = useRef(type);
+
+    // Redirect to home and open pre-registration modal if pre-registration is enabled
+    useEffect(() => {
+        if (isPreRegistrationEnabled) {
+            router.push('/');
+            // Small delay to ensure navigation completes before opening modal
+            setTimeout(() => {
+                openPreRegModal();
+            }, 100);
+        }
+    }, [router, openPreRegModal]);
 
     useEffect(() => {
         // Skip shutter on first render
