@@ -77,7 +77,7 @@ const styles = theme => {
       textShadow: `0 0 12px ${theme.color.secondary.main}, 0 0 25px ${theme.color.secondary.dark}`,
       whiteSpace: 'nowrap',
       '@media (max-width: 480px)': {
-        fontSize: '2.2rem',
+        fontSize: '1.5rem',
         letterSpacing: '0.1em'
       }
     },
@@ -145,7 +145,7 @@ class Component extends React.Component {
                 className={classes.brand}
                 onLinkStart={this.onLinkStart}
               />
-              <span className={classes.dates}>FEB 13 & 14</span>
+              <span className={classes.dates}>FEB 13 & 14, 2026</span>
               {/* <Link
               href='/schedule'
               className={classes.scheduleLink}
