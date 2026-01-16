@@ -40,6 +40,7 @@ class Component extends React.PureComponent {
 
     this.standByStartId = null;
     this.standByAnimationId = null;
+    this.hasPlayedStartSound = false; // Track if start sound has been played
 
     // This is a rough calculation of the time the Background last animating
     // according to the viewport width.
@@ -250,7 +251,11 @@ class Component extends React.PureComponent {
       }
     }, circuitDurationLongest);
 
-    sounds.start.play();
+    // Only play start sound on initial load, not on resize
+    if (!this.hasPlayedStartSound) {
+      sounds.start.play();
+      this.hasPlayedStartSound = true;
+    }
   }
 
   exit() {
