@@ -261,6 +261,73 @@
     }
 }
 
+/* Extra small mobile devices (less than 370px) */
+@media (max-width: 369px) {
+    .container {
+        padding: 24px 12px;
+    }
+
+    .title {
+        font-size: 1.3rem;
+        letter-spacing: 1.5px;
+    }
+
+    .subtitle {
+        font-size: 0.8rem;
+    }
+
+    .header {
+        margin-bottom: 20px;
+    }
+
+    .bentoGrid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+        gap: 8px;
+    }
+
+    .eventCard {
+        padding: 16px 14px 16px 18px;
+        border-radius: 8px;
+        min-height: 70px;
+    }
+
+    /* All cards span full width on very small screens */
+    .eventCard.wide,
+    .eventCard.tall {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+
+    .eventName {
+        font-size: 0.85rem;
+        line-height: 1.25;
+    }
+
+    .eventCard.wide .eventName,
+    .eventCard.tall .eventName {
+        font-size: 0.9rem;
+    }
+
+    .eventType {
+        font-size: 0.6rem;
+        letter-spacing: 1px;
+    }
+
+    .cardAccent {
+        width: 3px;
+    }
+
+    .cardContent {
+        gap: 4px;
+    }
+
+    /* Reduce hover effects for better touch experience */
+    .eventCard:hover {
+        transform: translateY(-2px) scale(1.005);
+    }
+}
+
 /* ================================================
    ANIMATIONS
    ================================================ */
