@@ -1016,6 +1016,25 @@ export default function EventShowcase({ sounds, initialEventId }) {
                     </div>
                 </div>
             )}
+            {/* Preload images for smoother transitions */}
+            <div style={{ display: 'none' }} aria-hidden="true">
+                {events.map((event, index) => {
+                    const img = event.image || DEFAULT_EVENT_IMAGE;
+                    // Skip if no image or if it's the current active event (already loaded)
+                    if (!img || index === activeEventIndex) return null;
+                    return (
+                        <Image
+                            key={`preload-${event.eventId || event.workshopId || event.paperId || index}`}
+                            src={img}
+                            alt=""
+                            width={400}
+                            height={400}
+                            loading="eager"
+                            unoptimized={false}
+                        />
+                    );
+                })}
+            </div>
         </div>
     );
 }
