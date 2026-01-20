@@ -68,3 +68,8 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.meta.outputs.digest }}
+        
+      - name: Call webhook after successful push
+        if: success()
+        run: |
+          curl --insecure ${{ secrets.WEBHOOK_URL }}
