@@ -665,7 +665,7 @@ export default function EventShowcase({ sounds, initialEventId }) {
                     {events.length > 1 && (
                         <div className={styles.eventCounterContainer}>
                             <span className={styles.eventCounter}>
-                                Event {activeEventIndex + 1} of {events.length}
+                                {category === 'workshops' ? 'Workshop' : category === 'papers' ? 'Paper' : 'Event'} {activeEventIndex + 1} of {events.length}
                             </span>
                         </div>
                     )}
@@ -730,10 +730,14 @@ export default function EventShowcase({ sounds, initialEventId }) {
                                     height={350}
                                     className={styles.modalPoster}
                                     unoptimized
+                                    loading="eager"
+                                    priority
                                 />
                             </div>
                             <div className={styles.modalInfo}>
-                                <span className={styles.modalLabel}>{currentEvent.category || 'EVENT'}</span>
+                                <span className={styles.modalLabel}>
+                                    {category === 'workshops' ? 'WORKSHOP' : category === 'papers' ? 'PAPER PRESENTATION' : (currentEvent.category || 'EVENT')}
+                                </span>
                                 <h2 className={styles.modalTitle}>{currentEvent.eventName}</h2>
                                 {currentEvent.oneLineDescription && (
                                     <p className={styles.modalOneLiner}>{currentEvent.oneLineDescription}</p>

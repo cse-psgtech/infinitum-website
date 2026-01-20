@@ -1501,6 +1501,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    letter-spacing: 0;
+    /* Fix alignment offset */
+    font-family: sans-serif;
+    /* Use standard font for perfect X centering */
   }
 }
 
@@ -1605,6 +1609,7 @@
   background-clip: text;
   margin: 0;
   text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
 }
 
 @media (max-width: 768px) {
