@@ -416,8 +416,8 @@ export const workshopsData = [
             }
         ],
         "contacts": [
-            { "name": "to be filled", "mobile": "8056567914", "_id": { "$oid": "dummy_oid_1" } },
-            { "name": "to be filled", "mobile": "7871243787", "_id": { "$oid": "dummy_oid_1b" } }
+            { "name": "Saran M", "mobile": "8148599787", "_id": { "$oid": "dummy_oid_1" } },
+            { "name": "Rohish Raj", "mobile": "8220990444", "_id": { "$oid": "dummy_oid_1b" } }
         ],
         "maxCount": 50,
         "description": "A comprehensive workshop on Product Prototyping for Industry Applications.",
@@ -449,8 +449,8 @@ export const workshopsData = [
             }
         ],
         "contacts": [
-            { "name": "to be filled", "mobile": "8056567914", "_id": { "$oid": "dummy_oid_2" } },
-            { "name": "to be filled", "mobile": "7871243787", "_id": { "$oid": "dummy_oid_2b" } }
+            { "name": "Surya Narayanan NT", "mobile": "7448757584", "_id": { "$oid": "dummy_oid_1" } },
+            { "name": "Dileepan", "mobile": "9344220239", "_id": { "$oid": "dummy_oid_1b" } }
         ],
         "maxCount": 50,
         "description": "Learn about threat detection modelling and cybersecurity defense strategies.",
