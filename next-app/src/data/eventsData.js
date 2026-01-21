@@ -416,7 +416,8 @@ export const workshopsData = [
             }
         ],
         "contacts": [
-            { "name": "Coordinator 1", "mobile": "9876543210", "_id": { "$oid": "dummy_oid_1" } }
+            { "name": "to be filled", "mobile": "8056567914", "_id": { "$oid": "dummy_oid_1" } },
+            { "name": "to be filled", "mobile": "7871243787", "_id": { "$oid": "dummy_oid_1b" } }
         ],
         "maxCount": 50,
         "description": "A comprehensive workshop on Product Prototyping for Industry Applications.",
@@ -448,7 +449,8 @@ export const workshopsData = [
             }
         ],
         "contacts": [
-            { "name": "Coordinator 1", "mobile": "9876543210", "_id": { "$oid": "dummy_oid_2" } }
+            { "name": "to be filled", "mobile": "8056567914", "_id": { "$oid": "dummy_oid_2" } },
+            { "name": "to be filled", "mobile": "7871243787", "_id": { "$oid": "dummy_oid_2b" } }
         ],
         "maxCount": 50,
         "description": "Learn about threat detection modelling and cybersecurity defense strategies.",
@@ -471,15 +473,15 @@ export const papersData = [
         "eventName": "AI and Emerging Trends",
         "contacts": [
             {
-                "name": "Dr. John Smith",
-                "mobile": "9876543210",
+                "name": "Saumiyaa Sri V L",
+                "mobile": "8056567914",
                 "_id": {
                     "$oid": "695a5069f567faee30248bfe"
                 }
             },
             {
-                "name": "Dr. Sarah Johnson",
-                "mobile": "9876543211",
+                "name": "Anbuchandiran K",
+                "mobile": "7871243787",
                 "_id": {
                     "$oid": "695a5069f567faee30248bff"
                 }
