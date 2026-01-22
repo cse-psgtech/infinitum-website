@@ -1,6 +1,7 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useSearchParams } from 'next/navigation';
 
 import { withStyles } from '@/tools/withStyles';
 import { Secuence } from '@/tools/withAnimation'; // Wait, Secuence component or tool? Original: import { Secuence } from '../components/Secuence';
@@ -199,4 +200,28 @@ Component.propTypes = {
   classes: PropTypes.any.isRequired
 };
 
-export default withStyles(styles)(Component);
+const StyledComponent = withStyles(styles)(Component);
+
+// Wrapper to capture referral code on homepage
+function HomePage() {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const ref = searchParams.get('ref');
+    
+    if (ref) {
+      // Save referral code to localStorage
+      localStorage.setItem('club_referral_code', ref);
+      console.log('Referral code captured on homepage:', ref);
+      
+      // Remove the 'ref' query parameter from URL without page reload
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('ref');
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+  }, [searchParams]);
+
+  return <StyledComponent />;
+}
+
+export default HomePage;
