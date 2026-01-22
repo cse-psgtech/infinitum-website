@@ -37,7 +37,7 @@ export default function EventShowcase({ sounds, initialEventId }) {
     const [activeEventIndex, setActiveEventIndex] = useState(0);
     const activeEventIndexRef = useRef(activeEventIndex);
     useEffect(() => { activeEventIndexRef.current = activeEventIndex; }, [activeEventIndex]);
-    
+
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -659,14 +659,18 @@ export default function EventShowcase({ sounds, initialEventId }) {
                         <CometCard className={styles.eventImageCard}>
                             <div className={`${styles.eventImage} ${isTransitioning ? styles.fadeOut : ''} `} onClick={openModal} style={{ cursor: 'pointer' }}>
                                 {currentEvent.image && (
-                                    <Image
+                                    <img
                                         key={currentEvent.eventId || currentEvent.workshopId || currentEvent.paperId}
                                         src={currentEvent.image}
                                         alt={currentEvent.eventName}
                                         width={400}
                                         height={400}
-                                        priority
                                         className={styles.eventImg}
+                                        onError={(e) => {
+                                            if (currentEvent.localImage) {
+                                                e.currentTarget.src = currentEvent.localImage;
+                                            }
+                                        }}
                                     />
                                 )}
                             </div>
@@ -742,16 +746,17 @@ export default function EventShowcase({ sounds, initialEventId }) {
                         <div className={styles.modalContent}>
                             <div className={styles.modalPosterWrapper}>
                                 <div className={styles.modalGlowRing}></div>
-                                <Image
+                                <img
                                     src={currentEvent.image}
                                     alt={currentEvent.eventName}
                                     width={350}
                                     height={350}
                                     className={styles.modalPoster}
-                                    loading="eager"
-                                    priority
-                                    placeholder="blur"
-                                    blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjM1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWEwMjBiIi8+PC9zdmc+"
+                                    onError={(e) => {
+                                        if (currentEvent.localImage) {
+                                            e.currentTarget.src = currentEvent.localImage;
+                                        }
+                                    }}
                                 />
                             </div>
                             <div className={styles.modalInfo}>
@@ -1047,14 +1052,17 @@ export default function EventShowcase({ sounds, initialEventId }) {
                     const img = event.image || DEFAULT_EVENT_IMAGE;
                     if (!img || index === activeEventIndex) return null;
                     return (
-                        <Image
+                        <img
                             key={`preload-current-${event.eventId || event.workshopId || event.paperId || index}`}
                             src={img}
                             alt=""
                             width={400}
                             height={400}
-                            loading="eager"
-                            unoptimized={false}
+                            onError={(e) => {
+                                if (event.localImage) {
+                                    e.currentTarget.src = event.localImage;
+                                }
+                            }}
                         />
                     );
                 })}
@@ -1065,14 +1073,12 @@ export default function EventShowcase({ sounds, initialEventId }) {
                     if (category === 'workshops') return null;
                     const img = w.image || DEFAULT_EVENT_IMAGE;
                     return (
-                        <Image
+                        <img
                             key={`preload-workshop-${w.workshopId || index}`}
                             src={img}
                             alt=""
                             width={400}
                             height={400}
-                            loading="lazy" // Use lazy for non-critical, or eager if user wants INSTANT switch
-                            unoptimized={false}
                         />
                     )
                 })}
@@ -1081,14 +1087,12 @@ export default function EventShowcase({ sounds, initialEventId }) {
                     if (category === 'papers') return null;
                     const img = p.image || DEFAULT_EVENT_IMAGE;
                     return (
-                        <Image
+                        <img
                             key={`preload-paper-${p.paperId || index}`}
                             src={img}
                             alt=""
                             width={400}
                             height={400}
-                            loading="lazy"
-                            unoptimized={false}
                         />
                     )
                 })}
