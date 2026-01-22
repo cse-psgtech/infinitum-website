@@ -40,21 +40,6 @@ export default function RegisterComponent() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    // Invisible Referral Tracking: Grab and Strip Logic
-    useEffect(() => {
-        const ref = searchParams.get('ref');
-        
-        if (ref) {
-            // Save referral code to localStorage
-            localStorage.setItem('club_referral_code', ref);
-            
-            // Remove the 'ref' query parameter from URL without page reload
-            const newUrl = new URL(window.location.href);
-            newUrl.searchParams.delete('ref');
-            window.history.replaceState({}, '', newUrl.toString());
-        }
-    }, [searchParams]);
-
     useEffect(() => {
         const storedEmail = localStorage.getItem('registration_email');
         const storedGoogleId = localStorage.getItem('registration_googleId');
