@@ -91,7 +91,7 @@ export const eventsData = [
         "rounds": [
             {
                 "title": "Code Charades",
-                "tagline": "Act fast, decode signals, earn your advantage.",
+                "tagline": "Act fast, decode words, earn your advantage.",
                 "description": "Teams must enact and guess technical terms using only gestures and non-verbal cues. Speed is the key to victory, as points are awarded based on how quickly the team can identify the correct terms to climb the leaderboard.",
                 "_id": { "$oid": "694cec9c297836cde7682491" }
             },
@@ -249,7 +249,7 @@ export const eventsData = [
             }
         ],
         "hall": "Computer Center",
-        "eventRules": "Individual participation only. Follow coding standards. Organisers' decisions are final.",
+        "eventRules": "Team participation only. Follow coding standards. Organisers' decisions are final.",
         "date": { "$date": "2026-02-01T09:00:00.000Z" },
         "closed": false,
         "timing": "Feb 14, 9:00 AM – 3:00 PM",
@@ -257,7 +257,7 @@ export const eventsData = [
         "scheduleEnd": "15:00",
         "scheduleDay": "day2",
         "prizePool": "₹8,000",
-        "teamSize": 1,
+        "teamSize": 2,
         "image": "/images/events/codemania_website.png"
     }
 
