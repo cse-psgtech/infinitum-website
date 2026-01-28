@@ -443,7 +443,7 @@ export const papersData = [
         "theme": "Artificial Intelligence",
         "tagline": "Explore the Future of AI and ML",
         "topic": "Recent advances in deep learning, neural networks, and AI applications in real-world scenarios",
-        "rules": "1. Each team must submit an abstract by the deadline\n2. Maximum team size is 3 members\n3. Presentation duration: 15 minutes\n4. Q&A session: 5 minutes",
+        "rules": "Each team can have a maximum of 4 members. Papers must be original, unpublished, and strictly follow IEEE format (max 2 pages).\nAbstract must be submitted in PDF before deadline. Plagiarism should not exceed 15–20%. Selected papers notified via email.\n15 mins presentation + 5 mins Q&A in PPT/PDF. Participants must report 30 mins before scheduled time.\nProject implementation is added credit; prototypes welcome. Judges’ decision is final.",
         "date": {
             "$date": "2026-02-14T09:00:00.000Z"
         },
@@ -452,7 +452,7 @@ export const papersData = [
         "deadline": {
             "$date": "2026-02-01T00:00:00.000Z"
         },
-        "teamSize": 3,
+        "teamSize": "1 to 4",
         "hall": "Department Seminar Hall - CSE",
         "closed": false,
         "youtubeUrl": "https://www.youtube.com/watch?v=example",
