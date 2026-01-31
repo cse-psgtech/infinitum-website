@@ -103,19 +103,19 @@ function PaymentPageContent() {
             <div className="payment-page">
                 <div className="payment-card">
                     <div className="payment-header">
-                        <div className={`payment-icon-processing ${showAnimation ? 'payment-icon-animated payment-icon-pulse' : ''}`}>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={showAnimation ? 'payment-svg-draw-processing' : ''}>
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <div className={`payment-icon-error ${showAnimation ? 'payment-icon-animated payment-icon-shake' : ''}`}>
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={showAnimation ? 'payment-svg-draw-error' : ''}>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </div>
-                        <h1>Payment Processing</h1>
-                        <p style={{ color: '#fae127' }}>
-                            Your payment is being processed. Please wait a moment and refresh to check the status.
+                        <h1>Payment Failed</h1>
+                        <p style={{ color: '#fca5a5' }}>
+                            {error || 'Unfortunately, your payment could not be processed. Please try again or contact support if the issue persists.'}
                         </p>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '24px' }}>
                         <button
-                            className="payment-btn payment-btn-processing"
+                            className="payment-btn payment-btn-secondary"
                             onClick={handleRefreshStatus}
                             disabled={isRefreshing}
                             style={{ textAlign: 'center' }}
@@ -134,6 +134,13 @@ function PaymentPageContent() {
                                     Refresh Payment Status
                                 </span>
                             )}
+                        </button>
+                        <button
+                            className="payment-btn"
+                            onClick={handleProceed}
+                            style={{ textAlign: 'center' }}
+                        >
+                            Proceed for event registration
                         </button>
                     </div>
                 </div>
