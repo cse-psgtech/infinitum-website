@@ -88,6 +88,24 @@
     color: #ff6b6b;
 }
 
+/* Processing Icon - Yellow */
+.payment-icon-processing {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    border: 2px solid #fae127;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-icon-processing svg {
+    width: 30px;
+    height: 30px;
+    color: #fae127;
+}
+
 .payment-icon-loading {
     width: 60px;
     height: 60px;
@@ -217,6 +235,24 @@
     color: #ffffff;
     background: rgba(199, 32, 113, 0.15);
     box-shadow: 0 0 15px rgba(199, 32, 113, 0.3);
+}
+
+/* Processing Button Variant - Yellow */
+.payment-btn-processing {
+    background: transparent;
+    border: 2px solid #fae127;
+    color: #fae127;
+}
+
+.payment-btn-processing::before {
+    background: linear-gradient(90deg, transparent, #fae127, #fff, transparent);
+}
+
+.payment-btn-processing:hover:not(:disabled) {
+    border-color: #fae127;
+    color: #ffffff;
+    background: rgba(250, 225, 39, 0.2);
+    box-shadow: 0 0 20px rgba(250, 225, 39, 0.4);
 }
 
 /* Button Content Layout */
@@ -370,6 +406,61 @@
 @keyframes draw-cross {
     to {
         stroke-dashoffset: 0;
+    }
+}
+
+/* Processing pulse animation */
+.payment-icon-pulse {
+    animation: icon-pulse 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes icon-pulse {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* SVG draw animation for processing clock */
+.payment-svg-draw-processing path {
+    stroke-dasharray: 80;
+    stroke-dashoffset: 80;
+    animation: draw-clock 0.6s ease-out 0.3s forwards;
+}
+
+@keyframes draw-clock {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Glow pulse effect for processing */
+.payment-icon-processing.payment-icon-animated {
+    box-shadow: 0 0 0 0 rgba(250, 225, 39, 0.4);
+    animation: icon-pulse 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+        processing-glow-pulse 2s ease-in-out 0.6s infinite;
+}
+
+@keyframes processing-glow-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(250, 225, 39, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 20px 8px rgba(250, 225, 39, 0.3);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(250, 225, 39, 0.1);
     }
 }
 
