@@ -369,21 +369,21 @@
   "eventName": "Thooral Hackathon",
   "category": "Technical",
   "oneLineDescription": "From idea to impact—design, document, build, and present innovative solutions.",
-  "description": "Thooral Hackathon is a 2-day technical event designed to simulate a real-world software engineering lifecycle. Problem statements will be given on Day 1—no themes, just straight-up problem statements. Participants ideate solutions, create structured documentation, develop working prototypes, and present their solutions across domains such as Full Stack Development, Machine Learning, and Blockchain. The event emphasizes innovation, teamwork, and industry-relevant development practices. Note: Lunch will not be provided. There are no prelim rounds. Students can participate simultaneously after receiving the problem statements, and it's fine if they only stay for Day 1 review and Day 2 judging rounds.",
+  "description": "Thooral Hackathon is a 2-day technical event designed to simulate a real-world software engineering lifecycle. Participants ideate solutions, create structured documentation, develop working prototypes, and present their solutions across domains such as Full Stack Development, Machine Learning, and Blockchain. The event emphasizes innovation, teamwork, and industry-relevant development practices.\n\nImportant Notes:\n• Problem statements will be given on Day 1—no themes, just direct problem statements\n• There are no preliminary rounds\n• Lunch will not be provided\n• Flexible participation: Students can work on other events during the hackathon and may attend only Day 1 review and Day 2 judging if preferred",
   "club_id": {
     "$oid": "69495a6a719d1b3bd5a9e7cd"
   },
   "rounds": [
     {
       "title": "Day 1",
-      "description": "Problem statements (not themes) are given to all participants. Students work on their solutions and can participate simultaneously after receiving the problem statements. The day concludes with a feedback review session where teams receive guidance and insights on their progress. Participants can choose to stay only for this day's review session.",
+      "description": "Problem statements (not themes) are given to all participants. Students work on their solutions throughout the day. The day concludes with a feedback review session where teams receive guidance and insights on their progress.",
       "_id": {
         "$oid": "695a3d878baa56af3270688c"
       }
     },
     {
       "title": "Day 2",
-      "description": "Teams complete their projects and present their final solutions to the judges. Participants can choose to attend only the judging round if they wish.",
+      "description": "Teams complete their projects and present their final solutions to the judges.",
       "_id": {
         "$oid": "695a3d878baa56af3270688d"
       }
